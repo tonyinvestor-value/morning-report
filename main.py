@@ -281,10 +281,15 @@ def main():
         all_news
     )
 
+    # 同时生成固定名字的 index.html（用于静态网站托管）
     html_filename = f"{OUTPUT_DIR}/投资晨报_{datetime.now().strftime('%Y%m%d')}.html"
+    index_filename = f"{OUTPUT_DIR}/index.html"
     with open(html_filename, 'w', encoding='utf-8') as f:
         f.write(html_report)
+    with open(index_filename, 'w', encoding='utf-8') as f:
+        f.write(html_report)
     print(f"   ✅ HTML晨报已保存到: {html_filename}")
+    print(f"   ✅ index.html 已更新（静态网站托管用）")
 
     print()
     print("=" * 60)
