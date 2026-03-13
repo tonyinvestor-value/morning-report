@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>港美股投资晨报 2026年03月13日</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: #1a1a2e;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .header .date {
+            color: #666;
+            font-size: 1.1em;
+        }
+        .disclaimer {
+            background: #ff9800;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .section {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1a1a2e;
+        }
+        .section-title.hk {
+            color: #e53935;
+        }
+        .section-title.us {
+            color: #1976d2;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .stock-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            padding: 10px 5px;
+            color: #1a1a2e;
+        }
+        .news {
+            color: #666;
+            font-size: 0.95em;
+            padding: 8px 5px;
+        }
+        .price-row {
+            padding: 10px 5px;
+            color: #333;
+            font-size: 0.95em;
+            border-bottom: 1px solid #eee;
+        }
+        .positive {
+            color: #e53935;
+            font-weight: bold;
+        }
+        .negative {
+            color: #43a047;
+            font-weight: bold;
+        }
+        .market-index {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .market-index .name {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .market-index .value {
+            font-size: 1.2em;
+        }
+        .status {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .status-item {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .status-item .label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        .status-item .value {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .news-list {
+            list-style: none;
+        }
+        .news-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .news-list li:last-child {
+            border-bottom: none;
+        }
+        .news-source {
+            background: #1976d2;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            white-space: nowrap;
+        }
+        .news-title {
+            flex: 1;
+            color: #1976d2;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .news-title:hover {
+            text-decoration: underline;
+            color: #0d47a1;
+        }
+        .news-time {
+            color: #999;
+            font-size: 0.85em;
+            white-space: nowrap;
+        }
+        .stock-news {
+            margin-bottom: 15px;
+        }
+        .stock-news-group {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #1976d2;
+        }
+        .stock-news-group h4 {
+            margin: 0 0 10px 0;
+            color: #1976d2;
+            font-size: 1.1em;
+        }
+        .stock-news-group .news-list {
+            margin: 0;
+            padding-left: 10px;
+        }
+        .strategy {
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .strategy ol {
+            margin-left: 20px;
+            color: #333;
+        }
+        .strategy li {
+            margin-bottom: 8px;
+        }
+        .footer {
+            text-align: center;
+            color: #aaa;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 港美股投资晨报</h1>
+            <div class="date">2026年03月13日</div>
+        </div>
+
+        <div class="disclaimer">
+            ⚠️ 时效声明：以下信息均为最近3天内的最新消息
+        </div>
+
+        <div class="section">
+            <h2 class="section-title hk">🇭🇰 港股动态</h2>
+            <table>
+                <tbody>
+                            <tr>
+            <td class="stock-name">腾讯(00700)</td>
+            <td class="news">腾讯(00700)：近期暂无重要更新 | ⏰--</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="price-row">
+                💰 股价：552.00 港元 |
+                📈 涨跌：<span class="positive">+5.50 (+1.01%)</span>
+            </td>
+        </tr>        <tr>
+            <td class="stock-name">美团(03690)</td>
+            <td class="news">美团(03690)：近期暂无重要更新 | ⏰--</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="price-row">
+                💰 股价：76.35 港元 |
+                📈 涨跌：<span class="negative">-0.35 (-0.46%)</span>
+            </td>
+        </tr>        <tr>
+            <td class="stock-name">理想汽车(02015)</td>
+            <td class="news">理想汽车(02015)：近期暂无重要更新 | ⏰--</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="price-row">
+                💰 股价：68.50 港元 |
+                📈 涨跌：<span class="negative">-1.65 (-2.35%)</span>
+            </td>
+        </tr>        <tr>
+            <td class="stock-name">泡泡玛特(09992)</td>
+            <td class="news">泡泡玛特(09992)：近期暂无重要更新 | ⏰--</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="price-row">
+                💰 股价：203.40 港元 |
+                📈 涨跌：<span class="negative">-1.80 (-0.88%)</span>
+            </td>
+        </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title us">🇺🇸 美股动态</h2>
+            <table>
+                <tbody>
+                            <tr>
+            <td class="stock-name">拼多多(PDD)</td>
+            <td class="news">拼多多(PDD)：近期暂无重要更新 | ⏰--</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="price-row">
+                💰 股价：101.62 美元 |
+                📈 涨跌：<span class="negative">-1.32 (-1.28%)</span>
+            </td>
+        </tr>        <tr>
+            <td class="stock-name">亚马逊(AMZN)</td>
+            <td class="news">亚马逊(AMZN)：近期暂无重要更新 | ⏰--</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="price-row">
+                💰 股价：209.53 美元 |
+                📈 涨跌：<span class="negative">-3.12 (-1.47%)</span>
+            </td>
+        </tr>        <tr>
+            <td class="stock-name">英伟达(NVDA)</td>
+            <td class="news">英伟达(NVDA)：近期暂无重要更新 | ⏰--</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="price-row">
+                💰 股价：183.14 美元 |
+                📈 涨跌：<span class="negative">-2.86 (-1.54%)</span>
+            </td>
+        </tr>        <tr>
+            <td class="stock-name">谷歌C(GOOGL)</td>
+            <td class="news">谷歌C(GOOGL)：近期暂无重要更新 | ⏰--</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="price-row">
+                💰 股价：303.55 美元 |
+                📈 涨跌：<span class="negative">-5.15 (-1.67%)</span>
+            </td>
+        </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">📈 市场表现</h2>
+            <div class="market-index">
+                <span class="name">🏢 港股恒生指数</span>
+                <span class="value negative">25586.38 点 | -130.38 (-0.51%) | 收盘/休市</span>
+            </div>
+            <div class="market-index">
+                <span class="name">📈 美股纳斯达克</span>
+                <span class="value negative">22311.98 点 | -404.15 (-1.78%) | 收盘/休市</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">📊 交易状态说明</h2>
+            <div class="status">
+                <div class="status-item">
+                    <div class="label">当前时间（北京时间）</div>
+                    <div class="value">2026-03-13 19:29:58</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">数据日期</div>
+                    <div class="value">2026-03-13 (收盘)</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">港股状态</div>
+                    <div class="value">收盘/休市</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">美股状态</div>
+                    <div class="value">收盘/休市</div>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">📌 个股相关新闻</h2>
+            <div class="stock-news">
+                <div class="stock-news-group"><h4>📌 苹果相关新闻</h4><ul class="news-list">            <li>
+                <span class="news-source">财新网</span>
+                <a href="https://www.caixin.com/2026-03-13/102422538.html" target="_blank" class="news-title">苹果下调中国应用商店佣金几个百分点</a>
+                <span class="news-time">2026-03-13</span>
+            </li></ul></div><div class="stock-news-group"><h4>📌 寒武纪相关新闻</h4><ul class="news-list">            <li>
+                <span class="news-source">财新网</span>
+                <a href="https://www.caixin.com/2026-03-13/102422346.html" target="_blank" class="news-title">T早报｜寒武纪2025年扭亏为盈；特斯拉和xAI合作开发智能体</a>
+                <span class="news-time">2026-03-13</span>
+            </li>            <li>
+                <span class="news-source">新浪财经</span>
+                <a href="https://finance.sina.com.cn/money/fund/etf/2026-03-13/doc-inhqvnzn1048690.shtml" target="_blank" class="news-title">寒武纪将摘"U"！科创成长层迎首批"毕业生"</a>
+                <span class="news-time">2026-03-13</span>
+            </li></ul></div><div class="stock-news-group"><h4>📌 比亚迪相关新闻</h4><ul class="news-list">            <li>
+                <span class="news-source">新浪财经</span>
+                <a href="https://finance.sina.com.cn/stock/t/2026-03-13/doc-inhqvnzp7857822.shtml" target="_blank" class="news-title">比亚迪第二代刀片电池+全新闪充技术全面落地</a>
+                <span class="news-time">2026-03-13</span>
+            </li></ul></div><div class="stock-news-group"><h4>📌 微软相关新闻</h4><ul class="news-list">            <li>
+                <span class="news-source">新浪财经</span>
+                <a href="https://finance.sina.com.cn/stock/2026-03-13/doc-inhqvnzr4108832.shtml" target="_blank" class="news-title">微软股价持续下滑，5个月内市值蒸发1万亿美元</a>
+                <span class="news-time">2026-03-13</span>
+            </li></ul></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">📰 综合财经新闻</h2>
+            <ul class="news-list">
+                        <li>
+            <span class="news-source">财新网</span>
+            <a href="https://www.caixin.com/2026-03-13/102422583.html" target="_blank" class="news-title">香港理工大学研发全声学脑机接口 有望为帕金森病提供新疗法</a>
+            <span class="news-time">2026-03-13</span>
+        </li>        <li>
+            <span class="news-source">财新网</span>
+            <a href="https://finance.caixin.com/2026-03-13/102422544.html" target="_blank" class="news-title">财新调查｜2月新增贷款或同比少增 债券发行疲软拖累社融</a>
+            <span class="news-time">2026-03-13</span>
+        </li>        <li>
+            <span class="news-source">财新网</span>
+            <a href="https://finance.caixin.com/2026-03-13/102422351.html" target="_blank" class="news-title">平均年薪最高2570万元 高频量化交易商薪酬揭秘</a>
+            <span class="news-time">2026-03-13</span>
+        </li>        <li>
+            <span class="news-source">财新网</span>
+            <a href="https://finance.caixin.com/2026-03-12/102422119.html" target="_blank" class="news-title">香港廉署联合证监打击内幕交易及贪污 国君中信证实有员工卷入</a>
+            <span class="news-time">2026-03-12</span>
+        </li>        <li>
+            <span class="news-source">财新网</span>
+            <a href="https://finance.caixin.com/2026-03-13/102422336.html" target="_blank" class="news-title">财经早知道｜伊朗最高领袖：不会放弃复仇，霍尔木兹海峡将继续关闭</a>
+            <span class="news-time">2026-03-13</span>
+        </li>        <li>
+            <span class="news-source">财新网</span>
+            <a href="https://www.caixin.com/2026-03-12/102422306.html" target="_blank" class="news-title">乘联会崔东树：预期车市在下半年恢复增长</a>
+            <span class="news-time">2026-03-12</span>
+        </li>        <li>
+            <span class="news-source">财新网</span>
+            <a href="https://finance.caixin.com/2026-03-13/102422368.html" target="_blank" class="news-title">今日开盘：两市双双低开 沪指跌幅0.28%</a>
+            <span class="news-time">2026-03-13</span>
+        </li>        <li>
+            <span class="news-source">财新网</span>
+            <a href="https://opinion.caixin.com/2026-03-13/102422470.html" target="_blank" class="news-title">油价飙升的经济影响</a>
+            <span class="news-time">2026-03-13</span>
+        </li>        <li>
+            <span class="news-source">新浪财经</span>
+            <a href="https://finance.sina.com.cn/money/fund/etf/2026-03-13/doc-inhqvnzr4110514.shtml" target="_blank" class="news-title">脑机接口重磅，概念股狂飙12%！华宝基金医疗ETF逆市翻红</a>
+            <span class="news-time">2026-03-13</span>
+        </li>        <li>
+            <span class="news-source">新浪财经</span>
+            <a href="https://finance.sina.com.cn/money/fund/etf/2026-03-13/doc-inhqvhtn4196932.shtml" target="_blank" class="news-title">136亿主力资金扫货化工！华宝基金化工ETF持续红盘</a>
+            <span class="news-time">2026-03-13</span>
+        </li>        <li>
+            <span class="news-source">新浪财经</span>
+            <a href="https://finance.sina.com.cn/wm/2026-03-13/doc-inhquwcu1200756.shtml" target="_blank" class="news-title">突破14英寸，国内半导体公司传来好消息！芯片散热也有大动作</a>
+            <span class="news-time">2026-03-13</span>
+        </li>        <li>
+            <span class="news-source">新浪财经</span>
+            <a href="https://finance.sina.com.cn/jjxw/2026-03-13/doc-inhqvnzr4100924.shtml" target="_blank" class="news-title">生物医药产业首次被列为国家"新兴支柱产业"</a>
+            <span class="news-time">2026-03-13</span>
+        </li>        <li>
+            <span class="news-source">新浪财经</span>
+            <a href="https://finance.sina.com.cn/cj/2026-03-13/doc-inhqvnzp7842016.shtml" target="_blank" class="news-title">利润暴增52%背后：工业富联正在进入一个新周期</a>
+            <span class="news-time">2026-03-13</span>
+        </li>        <li>
+            <span class="news-source">新浪财经</span>
+            <a href="https://finance.sina.com.cn/jjxw/2026-03-13/doc-inhqvnzk4115726.shtml" target="_blank" class="news-title">算电协同推动"未来能源"概念，绿电板块反弹</a>
+            <span class="news-time">2026-03-13</span>
+        </li>        <li>
+            <span class="news-source">新浪财经</span>
+            <a href="https://finance.sina.com.cn/stock/hkstock/2026-03-13/" target="_blank" class="news-title">港股午评：恒指跌0.48%，科指跌0.41%</a>
+            <span class="news-time">2026-03-13</span>
+        </li>        <li>
+            <span class="news-source">华尔街见闻</span>
+            <a href="https://wallstreetcn.com/articles/3767449" target="_blank" class="news-title">中国2月新增社融2.38万亿元，新增人民币贷款9000亿元，M2同比增长9%</a>
+            <span class="news-time">2026-03-12</span>
+        </li>        <li>
+            <span class="news-source">华尔街见闻</span>
+            <a href="https://wallstreetcn.com/articles/3767392" target="_blank" class="news-title">布油破百引爆通胀担忧，全球股市普跌，美元指数重回100关口，日元创20个月新低</a>
+            <span class="news-time">2026-03-12</span>
+        </li>        <li>
+            <span class="news-source">华尔街见闻</span>
+            <a href="https://wallstreetcn.com/articles/3767425" target="_blank" class="news-title">伊朗：袭击"林肯"号航母，已致其失去作战能力返回美国！美方：击中靠近航母的伊朗船只</a>
+            <span class="news-time">2026-03-12</span>
+        </li>        <li>
+            <span class="news-source">华尔街见闻</span>
+            <a href="https://wallstreetcn.com/articles/3767421" target="_blank" class="news-title">商务部：中美经贸磋商将于3月14日-17日举行，正在分析评估301调查</a>
+            <span class="news-time">2026-03-12</span>
+        </li>        <li>
+            <span class="news-source">华尔街见闻</span>
+            <a href="https://wallstreetcn.com/livenews/3069682" target="_blank" class="news-title">金融监管总局约谈5家平台运营机构</a>
+            <span class="news-time">2026-03-12</span>
+        </li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>🕐 信息时间范围：最近3天</p>
+            <p>📊 数据来源：财新网、新浪财经、华尔街见闻</p>
+            <p>🎯 覆盖公司：港股4家 + 美股4家重点标的</p>
+            <p>💹 股价精度：收盘价/实时价，含涨跌幅和成交额</p>
+        </div>
+    </div>
+</body>
+</html>

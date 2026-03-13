@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(/Users/tianxiang/anaconda3/envs/py311/bin/pip install:*)",
+      "Bash(/Users/tianxiang/anaconda3/envs/py311/bin/python3 generate_report.py)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" https://dashscope.aliyuncs.com/compatible-mode/v1/models -H \"Authorization: Bearer sk-c9a0a4fae84141bc95fed63602c51d6f\")"
+    ]
+  }
+}
