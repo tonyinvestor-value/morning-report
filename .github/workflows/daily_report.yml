@@ -27,12 +27,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Generate morning report
-        env:
-          ALIYUN_ACCESS_KEY_ID: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-          ALIYUN_ACCESS_KEY_SECRET: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
         run: python3 main.py
 
-      - name: Configure Aliyun OSS
+      - name: Upload to OSS
         uses: manyunyu/aliyun-oss-action@v1.0.0
         with:
           access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
@@ -42,14 +39,3 @@ jobs:
           endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
           source-dir: 'morning_report/'
           target-dir: ''
-
-      - name: Upload index.html
-        uses: manyunyu/aliyun-oss-action@v1.0.0
-        with:
-          access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-          access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-          bucket-name: ${{ secrets.ALIYUN_OSS_BUCKET }}
-          region: ${{ secrets.ALIYUN_OSS_REGION }}
-          endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
-          source-dir: 'morning_report/投资晨报_${{ github.run_id }}.html'
-          target-dir: 'index.html'
