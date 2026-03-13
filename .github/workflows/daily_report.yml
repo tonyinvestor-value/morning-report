@@ -42,7 +42,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add morning_report/
+          git add morning_report/ index.html
           git diff --staged --quiet || git commit -m "📊 更新投资晨报 $(date +\%Y\%m\%d)"
           git push origin main
 
@@ -85,7 +85,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'morning_report/index.html'
+          path: 'index.html'
 
       - name: Deploy to GitHub Pages
         id: deployment
