@@ -29,13 +29,55 @@ jobs:
       - name: Generate morning report
         run: python3 main.py
 
+      - name: Install Aliyun CLI
+        run: |
+          pip install aliyun-python-sdk-core-v3
+          pip install aliyun-python-sdk-oss
+
       - name: Upload to OSS
-        uses: manyunyu/aliyun-oss-action@v1.0.0
-        with:
-          access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-          access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-          bucket-name: ${{ secrets.ALIYUN_OSS_BUCKET }}
-          region: ${{ secrets.ALIYUN_OSS_REGION }}
-          endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
-          source-dir: 'morning_report/'
-          target-dir: ''
+        env:
+          OSS_ACCESS_KEY_ID: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+          OSS_ACCESS_KEY_SECRET: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+          OSS_BUCKET: ${{ secrets.ALIYUN_OSS_BUCKET }}
+          OSS_ENDPOINT: ${{ secrets.ALIYUN_OSS_REGION }}
+        run: |
+          python3 << 'EOF'
+          import os
+          import glob
+          from aliyunsdkcore.client import AliyunClient
+          from aliyunsdkcore.request import CommonRequest
+          import urllib.parse
+
+          access_key_id = os.environ['OSS_ACCESS_KEY_ID']
+          access_key_secret = os.environ['OSS_ACCESS_KEY_SECRET']
+          bucket = os.environ['OSS_BUCKET']
+          endpoint = os.environ['OSS_ENDPOINT']
+
+          client = AliyunClient(
+              'https://oss-' + endpoint + '.aliyuncs.com',
+              access_key_id,
+              access_key_secret
+          )
+
+          # Upload all files in morning_report/
+          for filepath in glob.glob('morning_report/*'):
+              filename = os.path.basename(filepath)
+              with open(filepath, 'rb') as f:
+                  content = f.read()
+
+              request = CommonRequest()
+              request.set_method('PUT')
+              request.set_domain(bucket + '.oss-' + endpoint + '.aliyuncs.com')
+              request.set_uri '/' + filename
+              request.set_content(content)
+              request.add_header('Content-Type', 'text/html' if filename.endswith('.html') else 'text/markdown')
+
+              try:
+                  response = client.do_action_with_exception(request)
+                  print(f'Uploaded: {filename}')
+              except Exception as e:
+                  print(f'Error uploading {filename}: {e}')
+                  raise
+
+          print('All files uploaded successfully!')
+          EOF

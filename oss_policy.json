@@ -1,0 +1,20 @@
+{
+  "Version": "1",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "oss:GetBucketInfo",
+        "oss:GetBucketStat",
+        "oss:PutObject",
+        "oss:DeleteObject",
+        "oss:ListBuckets",
+        "oss:ListObjects"
+      ],
+      "Resource": [
+        "acs:oss:*:*:morning-report",
+        "acs:oss:*:*:morning-report/*"
+      ]
+    }
+  ]
+}
