@@ -2,8 +2,8 @@ name: Daily Morning Report
 
 on:
   schedule:
-    # 每天 0:30 UTC = 8:30 北京时间
-    - cron: '30 0 * * *'
+    # 每天 23:30 UTC = 7:30 北京时间
+    - cron: '30 23 * * *'
   workflow_dispatch:
   push:
     branches:
