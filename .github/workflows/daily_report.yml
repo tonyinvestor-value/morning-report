@@ -47,8 +47,33 @@ jobs:
           bucket_name = os.environ['OSS_BUCKET']
           endpoint = os.environ['OSS_ENDPOINT']
 
+          print(f"Debug - Bucket: {bucket_name}")
+          print(f"Debug - Endpoint: {endpoint}")
+
           auth = oss2.Auth(access_key_id, access_key_secret)
-          bucket = oss2.Bucket(auth, f'https://{endpoint}.aliyuncs.com', bucket_name)
+
+          # 列出所有 bucket 来排查
+          try:
+              service = oss2.Service(auth, f'https://oss-{endpoint}.aliyuncs.com')
+              buckets = service.list_buckets()
+              print("Available buckets:")
+              for b in buckets.buckets:
+                  print(f"  - {b.name} ({b.region})")
+          except Exception as e:
+              print(f"List buckets error: {e}")
+
+          # 尝试连接 bucket
+          try:
+              bucket = oss2.Bucket(auth, f'https://{endpoint}.aliyuncs.com', bucket_name)
+              # 测试 bucket 是否存在
+              bucket.get_bucket_info()
+              print(f"Bucket {bucket_name} exists!")
+          except oss2.exceptions.NoSuchBucket:
+              print(f"ERROR: Bucket {bucket_name} does not exist!")
+              raise
+          except Exception as e:
+              print(f"Bucket connection error: {e}")
+              raise
 
           # Upload all files in morning_report/
           for filepath in glob.glob('morning_report/*'):
