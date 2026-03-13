@@ -1,3 +1,2 @@
 yfinance>=0.2.36
-aliyun-python-sdk-core-v3
-aliyun-python-sdk-oss
+oss2
