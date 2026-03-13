@@ -82,10 +82,13 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Prepare artifact directory
+        run: mkdir -p artifact && cp index.html artifact/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'index.html'
+          path: 'artifact'
 
       - name: Deploy to GitHub Pages
         id: deployment
