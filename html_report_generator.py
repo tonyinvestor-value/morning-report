@@ -90,8 +90,10 @@ def format_stock_row(name: str, ticker_code: str, stock_data: dict, currency: st
 
 def get_market_status() -> Dict:
     """获取市场状态"""
-    from datetime import timedelta
-    now = datetime.now()
+    from datetime import timedelta, timezone
+    # 使用北京时间（UTC+8）
+    beijing_tz = timezone(timedelta(hours=8))
+    now = datetime.now(beijing_tz)
     hour = now.hour
     weekday = now.weekday()
 

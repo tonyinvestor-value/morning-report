@@ -32,40 +32,51 @@ def retry_get_stock_price(ticker_symbol, max_retries=5, base_delay=3):
         try:
             stock = yf.Ticker(ticker_symbol)
 
-            # 尝试使用 fast_info 获取数据
-            try:
-                fast_info = stock.fast_info
-                price = fast_info.get('last_price') or fast_info.get('lastPrice')
-                if price is None:
-                    # 尝试使用 history 方法
-                    hist = stock.history(period="1d")
-                    if not hist.empty:
-                        price = hist['Close'].iloc[-1]
-                        prev_close = hist['Close'].iloc[0] if len(hist) > 1 else hist['Close'].iloc[0]
-                    else:
-                        info = stock.info
-                        price = info.get('currentPrice') or info.get('regularMarketPrice')
-                        prev_close = info.get('previousClose') or info.get('regularMarketPreviousClose')
+            # 使用 history 方法获取最近5天的数据，手动计算涨跌
+            hist = stock.history(period="5d")
+            volume = None
+
+            if not hist.empty:
+                # 获取最近一个有交易的日期
+                closes = hist['Close'].dropna()
+                if len(closes) >= 2:
+                    # 最新收盘价
+                    price = closes.iloc[-1]
+                    # 前一天收盘价（倒数第二个）
+                    prev_close = closes.iloc[-2]
+                    change = price - prev_close
+                    change_percent = (change / prev_close) * 100
+                    volume = hist['Volume'].iloc[-1]
+                    info = {}
+                elif len(closes) == 1:
+                    price = closes.iloc[-1]
+                    # 使用info获取前一日收盘
+                    info = stock.info
+                    prev_close = info.get('previousClose') or info.get('regularMarketPreviousClose') or price
+                    change = price - prev_close
+                    change_percent = (change / prev_close) * 100 if prev_close else 0
+                    volume = hist['Volume'].iloc[-1]
                 else:
-                    prev_close = fast_info.get('previous_close') or fast_info.get('previousClose')
-            except:
+                    price = prev_close = change = change_percent = None
+                    info = {}
+            else:
                 # 回退到 info
                 info = stock.info
                 price = info.get('currentPrice') or info.get('regularMarketPrice')
                 prev_close = info.get('previousClose') or info.get('regularMarketPreviousClose')
-
-            if price and prev_close:
-                change = price - prev_close
-                change_percent = (change / prev_close) * 100
-            else:
-                price = prev_close = change = change_percent = None
+                if price and prev_close:
+                    change = price - prev_close
+                    change_percent = (change / prev_close) * 100
+                else:
+                    change = change_percent = None
+                volume = info.get('volume')
 
             return {
                 "price": price,
                 "prev_close": prev_close,
                 "change": change,
                 "change_percent": change_percent,
-                "volume": info.get('volume') if 'info' in dir() else None,
+                "volume": volume,
                 "market_cap": info.get('marketCap') if 'info' in dir() else None
             }
         except Exception as e:
