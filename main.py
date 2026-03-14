@@ -128,12 +128,14 @@ def get_stock_data_with_fallback():
         hk_stock_data = stock_data.get_hk_stock_data()
         us_stock_data = stock_data.get_us_stock_data()
         indices_data = stock_data.get_market_indices()
+        period_data = stock_data.get_all_stocks_period_data()
 
         # 如果获取到数据
         if hk_stock_data or us_stock_data:
             return {
                 'hk': hk_stock_data,
-                'us': us_stock_data
+                'us': us_stock_data,
+                'period': period_data
             }, indices_data
     except Exception as e:
         print(f"   获取股价数据失败，使用缓存: {e}")
@@ -150,7 +152,8 @@ def get_stock_data_with_fallback():
 
     return {
         'hk': hk_data,
-        'us': us_data
+        'us': us_data,
+        'period': {}
     }, STOCK_PRICE_CACHE["指数"]
 
 
@@ -212,14 +215,17 @@ def main():
         hk_stock_data = stock_data.get_hk_stock_data()
         us_stock_data = stock_data.get_us_stock_data()
         indices_data = stock_data.get_market_indices()
+        period_data = stock_data.get_all_stocks_period_data()
 
         stock_data_combined = {
             'hk': hk_stock_data,
-            'us': us_stock_data
+            'us': us_stock_data,
+            'period': period_data
         }
 
         print(f"   港股数据: {len(hk_stock_data)} 只")
         print(f"   美股数据: {len(us_stock_data)} 只")
+        print(f"   多周期数据: {len(period_data)} 只")
     except Exception as e:
         print(f"   获取股价数据失败，使用缓存: {e}")
         hk_data = {}
@@ -230,7 +236,8 @@ def main():
             us_data[name] = {"ticker": "", **data}
         stock_data_combined = {
             'hk': hk_data,
-            'us': us_data
+            'us': us_data,
+            'period': {}
         }
         indices_data = STOCK_PRICE_CACHE["指数"]
 

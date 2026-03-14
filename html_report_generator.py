@@ -61,7 +61,59 @@ def get_change_class(change_percent: float) -> str:
     return ""
 
 
-def format_stock_row(name: str, ticker_code: str, stock_data: dict, currency: str = "港元") -> str:
+def generate_stock_summary(name: str, period_data: dict) -> str:
+    """生成股票多周期涨跌幅总结"""
+    if not period_data or name not in period_data:
+        return "📊 近期暂无多周期数据"
+
+    data = period_data.get(name, {})
+    if not data:
+        return "📊 近期暂无多周期数据"
+
+    # 获取各周期数据
+    data_5d = data.get("5日", {})
+    data_30d = data.get("30日", {})
+    data_90d = data.get("90日", {})
+
+    change_5d = data_5d.get("change_percent")
+    change_30d = data_30d.get("change_percent")
+    change_90d = data_90d.get("change_percent")
+
+    # 构建数据字符串
+    parts = []
+    if change_5d is not None:
+        parts.append(f"近5日 {change_5d:+.2f}%")
+    if change_30d is not None:
+        parts.append(f"近30日 {change_30d:+.2f}%")
+    if change_90d is not None:
+        parts.append(f"近90日 {change_90d:+.2f}%")
+
+    if not parts:
+        return "📊 近期暂无多周期数据"
+
+    # 计算评分（基于近30日）
+    score = 0
+    if change_30d is not None:
+        if change_30d > 10:
+            score = 5
+        elif change_30d > 5:
+            score = 4
+        elif change_30d > 0:
+            score = 3
+        elif change_30d > -5:
+            score = 2
+        else:
+            score = 1
+
+    stars = "⭐" * score if score > 0 else ""
+
+    # 生成简短总结
+    summary = " | ".join(parts) + " " + stars
+
+    return summary
+
+
+def format_stock_row(name: str, ticker_code: str, stock_data: dict, currency: str = "港元", period_data: dict = None) -> str:
     """格式化单只股票的信息行"""
     price = stock_data.get('price')
     change = stock_data.get('change')
@@ -69,18 +121,12 @@ def format_stock_row(name: str, ticker_code: str, stock_data: dict, currency: st
 
     change_class = get_change_class(change_percent)
 
-    # 获取新闻（如果有）
-    news_list = stock_data.get('news', [])
-    if news_list:
-        latest_news = news_list[0]['title']
-        news_time = news_list[0]['pub_date']
-        news_line = f"{name}({ticker_code})：{latest_news} | ⏰ {news_time}"
-    else:
-        news_line = f"{name}({ticker_code})：近期暂无重要更新 | ⏰--"
+    # 生成股价总结
+    summary = generate_stock_summary(name, period_data)
 
     return f"""        <tr>
             <td class="stock-name">{name}({ticker_code})</td>
-            <td class="news">{news_line}</td>
+            <td class="news">{summary}</td>
         </tr>
         <tr>
             <td colspan="2" class="price-row">
@@ -143,19 +189,22 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
 
     market_status = get_market_status()
 
+    # 获取多周期数据
+    period_data = stock_data.get('period', {})
+
     # 港股表格
     hk_rows = ""
     for name, (ticker_code, _) in HONGKONG_STOCKS.items():
         data = stock_data.get('hk', {}).get(name, {})
         data['news'] = news_data.get('hk', {}).get(name, [])
-        hk_rows += format_stock_row(name, ticker_code, data, '港元')
+        hk_rows += format_stock_row(name, ticker_code, data, '港元', period_data)
 
     # 美股表格
     us_rows = ""
     for name, (ticker_code, _) in US_STOCKS.items():
         data = stock_data.get('us', {}).get(name, {})
         data['news'] = news_data.get('us', {}).get(name, [])
-        us_rows += format_stock_row(name, ticker_code, data, '美元')
+        us_rows += format_stock_row(name, ticker_code, data, '美元', period_data)
 
     # 市场指数
     hk_index = indices_data.get('港股', {})

@@ -164,6 +164,54 @@ def get_us_stock_data():
     return results
 
 
+def get_stock_period_data(ticker_symbol: str) -> dict:
+    """获取股票多周期数据，用于生成总结"""
+    try:
+        stock = yf.Ticker(ticker_symbol)
+        result = {}
+
+        # 获取不同周期的数据
+        periods = [
+            ("5d", "5日"),
+            ("1mo", "30日"),
+            ("3mo", "90日")
+        ]
+
+        for period, period_name in periods:
+            try:
+                hist = stock.history(period=period)
+                if not hist.empty and len(hist) >= 2:
+                    prices = hist['Close']
+                    current_price = prices.iloc[-1]
+                    start_price = prices.iloc[0]
+                    change = current_price - start_price
+                    change_percent = (change / start_price) * 100 if start_price else 0
+                    result[period_name] = {
+                        "change": change,
+                        "change_percent": change_percent
+                    }
+                else:
+                    result[period_name] = {"change": None, "change_percent": None}
+            except:
+                result[period_name] = {"change": None, "change_percent": None}
+
+        return result
+    except Exception as e:
+        print(f"  获取 {ticker_symbol} 多周期数据失败: {e}")
+        return {"5日": None, "30日": None, "90日": None}
+
+
+def get_all_stocks_period_data() -> dict:
+    """获取所有股票的多周期数据"""
+    all_stocks = {**HONGKONG_STOCKS, **US_STOCKS}
+    results = {}
+    for name, ticker in all_stocks.items():
+        print(f"  正在获取 {name} 多周期数据...")
+        results[name] = get_stock_period_data(ticker)
+        time.sleep(1)
+    return results
+
+
 def get_market_indices():
     """获取主要市场指数"""
     indices = {
