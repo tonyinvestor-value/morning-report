@@ -91,26 +91,43 @@ def generate_stock_summary(name: str, period_data: dict) -> str:
     if not parts:
         return "📊 近期暂无多周期数据"
 
-    # 计算评分（基于近30日）
-    score = 0
-    if change_30d is not None:
-        if change_30d > 10:
-            score = 5
-        elif change_30d > 5:
-            score = 4
-        elif change_30d > 0:
-            score = 3
-        elif change_30d > -5:
-            score = 2
+    # 基于短中长期生成总结
+    summary = generate_trend_summary(change_5d, change_30d, change_90d)
+
+    # 生成简短总结：总结在前，数据在后
+    result = summary + " | " + " | ".join(parts)
+
+    return result
+
+
+def generate_trend_summary(change_5d: float, change_30d: float, change_90d: float) -> str:
+    """根据短中长期涨跌幅生成趋势总结"""
+    # 简化总结
+    if change_30d and change_90d:
+        if change_30d > 0 and change_90d > 0:
+            if change_30d > change_90d:
+                return "短中期强劲，长期向好"
+            else:
+                return "中长期上涨，短线整理"
+        elif change_30d < 0 and change_90d > 0:
+            return "短期回调，中长期上升趋势未变"
+        elif change_30d > 0 and change_90d < 0:
+            return "短期反弹，中长期承压"
         else:
-            score = 1
-
-    stars = "⭐" * score if score > 0 else ""
-
-    # 生成简短总结
-    summary = " | ".join(parts) + " " + stars
-
-    return summary
+            return "短中长期均走弱"
+    elif change_30d:
+        if change_30d > 5:
+            return "短期强势上涨"
+        elif change_30d > 0:
+            return "短期温和上涨"
+        elif change_30d < -5:
+            return "短期明显下跌"
+        elif change_30d < 0:
+            return "短期小幅回调"
+        else:
+            return "短期横盘整理"
+    else:
+        return "趋势不明"
 
 
 def format_stock_row(name: str, ticker_code: str, stock_data: dict, currency: str = "港元", period_data: dict = None) -> str:
