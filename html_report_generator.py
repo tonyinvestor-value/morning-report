@@ -82,7 +82,6 @@ def generate_stock_summary(name: str, period_data: dict) -> str:
     # 获取动量指标和布林带
     momentum = data.get("momentum", {})
     rsi_14 = momentum.get("rsi_14")
-    momentum_10 = momentum.get("momentum_10")
     momentum_30 = momentum.get("momentum_30")
     bollinger = momentum.get("bollinger")
 
@@ -98,32 +97,32 @@ def generate_stock_summary(name: str, period_data: dict) -> str:
     if not parts:
         return "📊 近期暂无多周期数据"
 
-    # 基于历史数据生成总结
-    summary = generate_trend_summary(change_5d, change_30d, change_90d)
+    # 基于动量指标生成预测（用change_5d作为短期动量）
+    prediction = generate_prediction(rsi_14, change_5d, momentum_30, bollinger)
 
-    # 基于动量指标生成预测（传入布林带）
-    prediction = generate_prediction(rsi_14, momentum_10, momentum_30, bollinger)
-
-    # 生成简短总结：趋势总结 + 预测 + 数据
-    result = summary + " | " + prediction + " | " + " | ".join(parts)
+    # 生成简短总结：预测 + 数据
+    result = prediction + " | " + " | ".join(parts)
 
     return result
 
 
-def generate_prediction(rsi_14: float, momentum_10: float, momentum_30: float, bollinger: dict = None) -> str:
-    """基于动量指标预测未来走势 - 大白话版"""
-    if rsi_14 is None and momentum_10 is None:
+def generate_prediction(rsi_14: float, change_5d: float, momentum_30: float, bollinger: dict = None) -> str:
+    """基于技术指标预测未来走势 - 大白话版
+
+    用近5日涨跌幅(change_5d)作为短期动量
+    """
+    if rsi_14 is None and change_5d is None:
         return "数据不足"
 
-    # ========== 1. 涨跌判断（大白话）==========
-    if momentum_10 is not None:
-        if momentum_10 > 5:
+    # ========== 1. 短期涨跌判断（用近5日）==========
+    if change_5d is not None:
+        if change_5d > 5:
             trend = "最近涨得不错"
-        elif momentum_10 > 0:
+        elif change_5d > 0:
             trend = "最近小幅上涨"
-        elif momentum_10 < -5:
+        elif change_5d < -5:
             trend = "最近跌得厉害"
-        elif momentum_10 < 0:
+        elif change_5d < 0:
             trend = "最近小幅下跌"
         else:
             trend = "最近没涨没跌"
@@ -148,9 +147,9 @@ def generate_prediction(rsi_14: float, momentum_10: float, momentum_30: float, b
         if bollinger.get("squeeze"):
             bb_msg = "行情在盘整，等方向"
         elif bollinger.get("expanding"):
-            if momentum_10 and momentum_10 > 0:
+            if change_5d and change_5d > 0:
                 bb_msg = "涨势很猛，在加速"
-            elif momentum_10 and momentum_10 < 0:
+            elif change_5d and change_5d < 0:
                 bb_msg = "跌势很猛，在加速"
 
         if bollinger.get("at_upper"):
@@ -158,49 +157,12 @@ def generate_prediction(rsi_14: float, momentum_10: float, momentum_30: float, b
         elif bollinger.get("at_lower"):
             bb_msg = "快到底了" if not bb_msg else bb_msg + "，快到底了"
 
-    # ========== 4. 综合结论 ==========
-    # 计算综合得分
-    score = 0
-    if rsi_14 and rsi_14 > 50:
-        score += 1
-    if rsi_14 and rsi_14 > 70:
-        score -= 1
-    if rsi_14 and rsi_14 < 30:
-        score += 1
-
-    if momentum_10 and momentum_10 > 0:
-        score += 1 if momentum_10 > 3 else 0
-    elif momentum_10 and momentum_10 < 0:
-        score -= 1 if momentum_10 < -3 else 0
-
-    if momentum_30 and momentum_30 > 0:
-        score += 1 if momentum_30 > 5 else 0
-    elif momentum_30 and momentum_30 < 0:
-        score -= 1 if momentum_30 < -5 else 0
-
-    # 布林带加权
-    if bollinger:
-        if bollinger.get("expanding"):
-            if momentum_10 and momentum_10 > 0:
-                score += 1  # 上涨加速，加分
-            elif momentum_10 and momentum_10 < 0:
-                score -= 1  # 下跌加速，减分
-
-    # 生成最终结论
-    if score >= 2:
-        conclusion = "可以继续持有"
-    elif score <= -2:
-        conclusion = "要小心点了"
-    else:
-        conclusion = "再观望一下"
-
-    # 拼成大白话
+    # ========== 4. 拼成大白话（不要结论）==========
     parts = [trend]
     if rsi_msg:
         parts.append(rsi_msg)
     if bb_msg:
         parts.append(bb_msg)
-    parts.append(conclusion)
 
     return "。".join(parts)
 
@@ -246,15 +208,16 @@ def format_stock_row(name: str, ticker_code: str, stock_data: dict, currency: st
     # 生成股价总结
     summary = generate_stock_summary(name, period_data)
 
+    # 调整顺序：先显示股价涨跌，再显示预测
     return f"""        <tr>
             <td class="stock-name">{name}({ticker_code})</td>
-            <td class="news">{summary}</td>
-        </tr>
-        <tr>
-            <td colspan="2" class="price-row">
+            <td class="price-row">
                 💰 股价：{format_price(price, currency)} |
                 📈 涨跌：<span class="{change_class}">{format_change(change, change_percent)}</span>
             </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="news">{summary}</td>
         </tr>"""
 
 
