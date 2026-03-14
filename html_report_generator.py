@@ -4,8 +4,10 @@
 按模板格式生成港美股投资晨报HTML
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict
+import pytz
+import os
 
 # 股票代码映射
 HONGKONG_STOCKS = {
@@ -89,12 +91,12 @@ def format_stock_row(name: str, ticker_code: str, stock_data: dict, currency: st
 
 
 def get_market_status() -> Dict:
-    """获取市场状态"""
-    from datetime import timedelta, timezone
-    # 使用北京时间（UTC+8）
-    beijing_tz = timezone(timedelta(hours=8))
+    """获取市场状态（北京时间）"""
+    # 使用北京时间
+    beijing_tz = pytz.timezone('Asia/Shanghai')
     now = datetime.now(beijing_tz)
     hour = now.hour
+    minute = now.minute
     weekday = now.weekday()
 
     is_weekend = weekday >= 5
@@ -109,7 +111,7 @@ def get_market_status() -> Dict:
         data_date += " (周末数据)"
     else:
         # 工作日：9:30前显示上一个交易日的数据
-        if hour < 9 or (hour == 9 and now.minute < 30):
+        if hour < 9 or (hour == 9 and minute < 30):
             data_date = (now - timedelta(days=1)).strftime('%Y-%m-%d')
             data_date += " (盘前数据)"
         else:
@@ -120,8 +122,7 @@ def get_market_status() -> Dict:
                 data_date = now.strftime('%Y-%m-%d') + " (收盘)"
 
     # 港股交易时间: 9:30-12:00, 13:00-16:00 HKT
-    hk_hour = hour
-    hk_status = "开盘中" if (9 <= hk_hour < 12 or 13 <= hk_hour < 16) and not is_weekend else "收盘/休市"
+    hk_status = "开盘中" if (9 <= hour < 12 or 13 <= hour < 16) and not is_weekend else "收盘/休市"
 
     # 美股交易时间: 9:30-16:00 EST (22:30-05:00 北京时间)
     us_status = "开盘中" if (hour >= 22 or hour < 4) and not is_weekend else "收盘/休市"
