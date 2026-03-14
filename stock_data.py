@@ -191,6 +191,73 @@ def calculate_momentum(prices: list, period: int = 10) -> float:
     return ((prices[-1] - prices[-period-1]) / prices[-period-1]) * 100
 
 
+def calculate_bollinger_bands(prices: list, period: int = 20) -> dict:
+    """计算布林带指标
+
+    布林带 = 20日均线 ± 2倍标准差
+    - 收窄：波动率低，市场在盘整
+    - 放大：波动率高，趋势加速
+    """
+    if len(prices) < period:
+        return None
+
+    # 取最近period个价格计算
+    recent_prices = prices[-period:]
+
+    # 20日均线（中轨）
+    middle_band = sum(recent_prices) / period
+
+    # 计算标准差
+    variance = sum((p - middle_band) ** 2 for p in recent_prices) / period
+    std_dev = variance ** 0.5
+
+    # 上轨和下轨
+    upper_band = middle_band + 2 * std_dev
+    lower_band = middle_band - 2 * std_dev
+
+    # 当前价格
+    current_price = prices[-1]
+
+    # 当前位置 (0=在下轨, 1=在上轨)
+    bandwidth = upper_band - lower_band
+    position = (current_price - lower_band) / bandwidth if bandwidth > 0 else 0.5
+
+    # 判断是否接近上轨/下轨
+    at_upper = current_price >= upper_band * 0.98  # 接近上轨（98%以内）
+    at_lower = current_price <= lower_band * 1.02  # 接近下轨（102%以外）
+
+    # 判断带宽趋势（收窄还是放大）
+    squeeze = False
+    expanding = False
+    if len(prices) >= period + 20:
+        # 计算历史的带宽
+        current_bandwidth = bandwidth
+        # 取20天前的带宽
+        old_prices = prices[-(period + 20):-20]
+        if len(old_prices) >= period:
+            old_ma = sum(old_prices[-period:]) / period
+            old_var = sum((p - old_ma) ** 2 for p in old_prices[-period:]) / period
+            old_std = old_var ** 0.5
+            old_bandwidth = 4 * old_std
+
+            if current_bandwidth < old_bandwidth * 0.7:
+                squeeze = True
+            elif current_bandwidth > old_bandwidth * 1.3:
+                expanding = True
+
+    return {
+        "middle": middle_band,
+        "upper": upper_band,
+        "lower": lower_band,
+        "bandwidth": bandwidth,
+        "position": position,
+        "squeeze": squeeze,
+        "expanding": expanding,
+        "at_upper": at_upper,
+        "at_lower": at_lower
+    }
+
+
 def get_stock_period_data(ticker_symbol: str) -> dict:
     """获取股票多周期数据和动量指标"""
     try:
@@ -234,14 +301,17 @@ def get_stock_period_data(ticker_symbol: str) -> dict:
                 momentum_10 = calculate_momentum(prices_list, 10)
                 # 计算中期动量 (30日)
                 momentum_30 = calculate_momentum(prices_list, 30)
+                # 计算布林带
+                bollinger = calculate_bollinger_bands(prices_list, 20)
 
                 result["momentum"] = {
                     "rsi_14": rsi_14,
                     "momentum_10": momentum_10,
-                    "momentum_30": momentum_30
+                    "momentum_30": momentum_30,
+                    "bollinger": bollinger
                 }
         except Exception as e:
-            result["momentum"] = {"rsi_14": None, "momentum_10": None, "momentum_30": None}
+            result["momentum"] = {"rsi_14": None, "momentum_10": None, "momentum_30": None, "bollinger": None}
 
         return result
     except Exception as e:

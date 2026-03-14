@@ -79,11 +79,12 @@ def generate_stock_summary(name: str, period_data: dict) -> str:
     change_30d = data_30d.get("change_percent")
     change_90d = data_90d.get("change_percent")
 
-    # 获取动量指标
+    # 获取动量指标和布林带
     momentum = data.get("momentum", {})
     rsi_14 = momentum.get("rsi_14")
     momentum_10 = momentum.get("momentum_10")
     momentum_30 = momentum.get("momentum_30")
+    bollinger = momentum.get("bollinger")
 
     # 构建数据字符串
     parts = []
@@ -100,8 +101,8 @@ def generate_stock_summary(name: str, period_data: dict) -> str:
     # 基于历史数据生成总结
     summary = generate_trend_summary(change_5d, change_30d, change_90d)
 
-    # 基于动量指标生成预测
-    prediction = generate_prediction(rsi_14, momentum_10, momentum_30)
+    # 基于动量指标生成预测（传入布林带）
+    prediction = generate_prediction(rsi_14, momentum_10, momentum_30, bollinger)
 
     # 生成简短总结：趋势总结 + 预测 + 数据
     result = summary + " | " + prediction + " | " + " | ".join(parts)
@@ -109,72 +110,99 @@ def generate_stock_summary(name: str, period_data: dict) -> str:
     return result
 
 
-def generate_prediction(rsi_14: float, momentum_10: float, momentum_30: float) -> str:
-    """基于动量指标预测未来走势"""
+def generate_prediction(rsi_14: float, momentum_10: float, momentum_30: float, bollinger: dict = None) -> str:
+    """基于动量指标预测未来走势 - 大白话版"""
     if rsi_14 is None and momentum_10 is None:
-        return "预测不明"
+        return "数据不足"
 
-    signals = []
-
-    # RSI分析
-    if rsi_14 is not None:
-        if rsi_14 > 70:
-            signals.append("RSI超买")
-        elif rsi_14 < 30:
-            signals.append("RSI超卖")
-
-    # 动量分析
+    # ========== 1. 涨跌判断（大白话）==========
     if momentum_10 is not None:
         if momentum_10 > 5:
-            signals.append("短期动量强劲")
+            trend = "最近涨得不错"
+        elif momentum_10 > 0:
+            trend = "最近小幅上涨"
         elif momentum_10 < -5:
-            signals.append("短期动量疲软")
-
-    if momentum_30 is not None:
-        if momentum_30 > 10:
-            signals.append("中期动量向上")
-        elif momentum_30 < -10:
-            signals.append("中期动量向下")
-
-    # 综合预测
-    if rsi_14 is not None and momentum_10 is not None:
-        # 计算综合得分
-        score = 0
-
-        # RSI: >50加1分，>70超买减1分，<30超卖加1分
-        if rsi_14 > 50:
-            score += 1
-        if rsi_14 > 70:
-            score -= 1
-        if rsi_14 < 30:
-            score += 1
-
-        # 动量: 正向加分
-        if momentum_10 and momentum_10 > 0:
-            score += 1 if momentum_10 > 3 else 0
-        elif momentum_10 and momentum_10 < 0:
-            score -= 1 if momentum_10 < -3 else 0
-
-        if momentum_30 and momentum_30 > 0:
-            score += 1 if momentum_30 > 5 else 0
-        elif momentum_30 and momentum_30 < 0:
-            score -= 1 if momentum_30 < -5 else 0
-
-        # 生成预测
-        if score >= 2:
-            pred = "预测上涨"
-        elif score <= -2:
-            pred = "预测下跌"
+            trend = "最近跌得厉害"
+        elif momentum_10 < 0:
+            trend = "最近小幅下跌"
         else:
-            pred = "预测震荡"
-
-        # 添加信号
-        signal_str = " | ".join(signals) if signals else ""
-        if signal_str:
-            return f"{pred}({signal_str})"
-        return pred
+            trend = "最近没涨没跌"
     else:
-        return "预测不明"
+        trend = "趋势不明"
+
+    # ========== 2. RSI信号（大白话）==========
+    rsi_msg = ""
+    if rsi_14 is not None:
+        if rsi_14 < 30:
+            rsi_msg = "价格偏低，可能要反弹"
+        elif rsi_14 > 70:
+            rsi_msg = "价格偏高，可能要回调"
+        elif rsi_14 < 45:
+            rsi_msg = "价格偏弱"
+        elif rsi_14 > 55:
+            rsi_msg = "价格偏强"
+
+    # ========== 3. 布林带信号（大白话）==========
+    bb_msg = ""
+    if bollinger:
+        if bollinger.get("squeeze"):
+            bb_msg = "行情在盘整，等方向"
+        elif bollinger.get("expanding"):
+            if momentum_10 and momentum_10 > 0:
+                bb_msg = "涨势很猛，在加速"
+            elif momentum_10 and momentum_10 < 0:
+                bb_msg = "跌势很猛，在加速"
+
+        if bollinger.get("at_upper"):
+            bb_msg = "快到天花板了" if not bb_msg else bb_msg + "，快到天花板了"
+        elif bollinger.get("at_lower"):
+            bb_msg = "快到底了" if not bb_msg else bb_msg + "，快到底了"
+
+    # ========== 4. 综合结论 ==========
+    # 计算综合得分
+    score = 0
+    if rsi_14 and rsi_14 > 50:
+        score += 1
+    if rsi_14 and rsi_14 > 70:
+        score -= 1
+    if rsi_14 and rsi_14 < 30:
+        score += 1
+
+    if momentum_10 and momentum_10 > 0:
+        score += 1 if momentum_10 > 3 else 0
+    elif momentum_10 and momentum_10 < 0:
+        score -= 1 if momentum_10 < -3 else 0
+
+    if momentum_30 and momentum_30 > 0:
+        score += 1 if momentum_30 > 5 else 0
+    elif momentum_30 and momentum_30 < 0:
+        score -= 1 if momentum_30 < -5 else 0
+
+    # 布林带加权
+    if bollinger:
+        if bollinger.get("expanding"):
+            if momentum_10 and momentum_10 > 0:
+                score += 1  # 上涨加速，加分
+            elif momentum_10 and momentum_10 < 0:
+                score -= 1  # 下跌加速，减分
+
+    # 生成最终结论
+    if score >= 2:
+        conclusion = "可以继续持有"
+    elif score <= -2:
+        conclusion = "要小心点了"
+    else:
+        conclusion = "再观望一下"
+
+    # 拼成大白话
+    parts = [trend]
+    if rsi_msg:
+        parts.append(rsi_msg)
+    if bb_msg:
+        parts.append(bb_msg)
+    parts.append(conclusion)
+
+    return "。".join(parts)
 
 
 def generate_trend_summary(change_5d: float, change_30d: float, change_90d: float) -> str:
