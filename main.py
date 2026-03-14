@@ -246,9 +246,12 @@ def main():
     # 获取分类新闻
     stock_related_news, general_news = news_fetcher.get_financial_news()
 
-    # 个股新闻为空
-    hk_news = {}
-    us_news = {}
+    # 获取个股新闻（从yfinance）
+    print("   📊 正在获取个股新闻...")
+    hk_news = news_fetcher.get_all_hk_news(days=3)
+    us_news = news_fetcher.get_all_us_news(days=3)
+    print(f"   📊 港股新闻: {len(hk_news)} 条")
+    print(f"   📊 美股新闻: {len(us_news)} 条")
 
     news_combined = {
         'hk': hk_news,
