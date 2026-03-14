@@ -62,7 +62,7 @@ def get_change_class(change_percent: float) -> str:
 
 
 def generate_stock_summary(name: str, period_data: dict) -> str:
-    """生成股票多周期涨跌幅总结"""
+    """生成股票多周期涨跌幅总结和预测"""
     if not period_data or name not in period_data:
         return "📊 近期暂无多周期数据"
 
@@ -79,6 +79,12 @@ def generate_stock_summary(name: str, period_data: dict) -> str:
     change_30d = data_30d.get("change_percent")
     change_90d = data_90d.get("change_percent")
 
+    # 获取动量指标
+    momentum = data.get("momentum", {})
+    rsi_14 = momentum.get("rsi_14")
+    momentum_10 = momentum.get("momentum_10")
+    momentum_30 = momentum.get("momentum_30")
+
     # 构建数据字符串
     parts = []
     if change_5d is not None:
@@ -91,13 +97,84 @@ def generate_stock_summary(name: str, period_data: dict) -> str:
     if not parts:
         return "📊 近期暂无多周期数据"
 
-    # 基于短中长期生成总结
+    # 基于历史数据生成总结
     summary = generate_trend_summary(change_5d, change_30d, change_90d)
 
-    # 生成简短总结：总结在前，数据在后
-    result = summary + " | " + " | ".join(parts)
+    # 基于动量指标生成预测
+    prediction = generate_prediction(rsi_14, momentum_10, momentum_30)
+
+    # 生成简短总结：趋势总结 + 预测 + 数据
+    result = summary + " | " + prediction + " | " + " | ".join(parts)
 
     return result
+
+
+def generate_prediction(rsi_14: float, momentum_10: float, momentum_30: float) -> str:
+    """基于动量指标预测未来走势"""
+    if rsi_14 is None and momentum_10 is None:
+        return "预测不明"
+
+    signals = []
+
+    # RSI分析
+    if rsi_14 is not None:
+        if rsi_14 > 70:
+            signals.append("RSI超买")
+        elif rsi_14 < 30:
+            signals.append("RSI超卖")
+
+    # 动量分析
+    if momentum_10 is not None:
+        if momentum_10 > 5:
+            signals.append("短期动量强劲")
+        elif momentum_10 < -5:
+            signals.append("短期动量疲软")
+
+    if momentum_30 is not None:
+        if momentum_30 > 10:
+            signals.append("中期动量向上")
+        elif momentum_30 < -10:
+            signals.append("中期动量向下")
+
+    # 综合预测
+    if rsi_14 is not None and momentum_10 is not None:
+        # 计算综合得分
+        score = 0
+
+        # RSI: >50加1分，>70超买减1分，<30超卖加1分
+        if rsi_14 > 50:
+            score += 1
+        if rsi_14 > 70:
+            score -= 1
+        if rsi_14 < 30:
+            score += 1
+
+        # 动量: 正向加分
+        if momentum_10 and momentum_10 > 0:
+            score += 1 if momentum_10 > 3 else 0
+        elif momentum_10 and momentum_10 < 0:
+            score -= 1 if momentum_10 < -3 else 0
+
+        if momentum_30 and momentum_30 > 0:
+            score += 1 if momentum_30 > 5 else 0
+        elif momentum_30 and momentum_30 < 0:
+            score -= 1 if momentum_30 < -5 else 0
+
+        # 生成预测
+        if score >= 2:
+            pred = "预测上涨"
+        elif score <= -2:
+            pred = "预测下跌"
+        else:
+            pred = "预测震荡"
+
+        # 添加信号
+        signal_str = " | ".join(signals) if signals else ""
+        if signal_str:
+            return f"{pred}({signal_str})"
+        return pred
+    else:
+        return "预测不明"
 
 
 def generate_trend_summary(change_5d: float, change_30d: float, change_90d: float) -> str:

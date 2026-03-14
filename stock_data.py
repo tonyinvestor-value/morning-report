@@ -164,8 +164,35 @@ def get_us_stock_data():
     return results
 
 
+def calculate_rsi(prices: list, period: int = 14) -> float:
+    """计算RSI动量指标"""
+    if len(prices) < period + 1:
+        return None
+
+    deltas = [prices[i] - prices[i-1] for i in range(1, len(prices))]
+    gains = [d if d > 0 else 0 for d in deltas]
+    losses = [-d if d < 0 else 0 for d in deltas]
+
+    avg_gain = sum(gains[-period:]) / period
+    avg_loss = sum(losses[-period:]) / period
+
+    if avg_loss == 0:
+        return 100
+
+    rs = avg_gain / avg_loss
+    rsi = 100 - (100 / (1 + rs))
+    return rsi
+
+
+def calculate_momentum(prices: list, period: int = 10) -> float:
+    """计算动量指标（价格变化率）"""
+    if len(prices) < period + 1:
+        return None
+    return ((prices[-1] - prices[-period-1]) / prices[-period-1]) * 100
+
+
 def get_stock_period_data(ticker_symbol: str) -> dict:
-    """获取股票多周期数据，用于生成总结"""
+    """获取股票多周期数据和动量指标"""
     try:
         stock = yf.Ticker(ticker_symbol)
         result = {}
@@ -195,10 +222,31 @@ def get_stock_period_data(ticker_symbol: str) -> dict:
             except:
                 result[period_name] = {"change": None, "change_percent": None}
 
+        # 获取更长时间的历史数据计算动量指标
+        try:
+            hist_long = stock.history(period="3mo")
+            if not hist_long.empty and len(hist_long) >= 20:
+                prices_list = hist_long['Close'].tolist()
+
+                # 计算RSI (14日)
+                rsi_14 = calculate_rsi(prices_list, 14)
+                # 计算短期动量 (10日)
+                momentum_10 = calculate_momentum(prices_list, 10)
+                # 计算中期动量 (30日)
+                momentum_30 = calculate_momentum(prices_list, 30)
+
+                result["momentum"] = {
+                    "rsi_14": rsi_14,
+                    "momentum_10": momentum_10,
+                    "momentum_30": momentum_30
+                }
+        except Exception as e:
+            result["momentum"] = {"rsi_14": None, "momentum_10": None, "momentum_30": None}
+
         return result
     except Exception as e:
         print(f"  获取 {ticker_symbol} 多周期数据失败: {e}")
-        return {"5日": None, "30日": None, "90日": None}
+        return {"5日": None, "30日": None, "90日": None, "momentum": None}
 
 
 def get_all_stocks_period_data() -> dict:
