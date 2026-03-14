@@ -206,24 +206,34 @@ def main():
     print("=" * 60)
     print()
 
-    # 使用缓存的股价数据（避免yfinance速率限制）
+    # 实时获取股价数据
     print("📈 正在获取股价数据...")
-    hk_data = {}
-    for name, data in STOCK_PRICE_CACHE["港股"].items():
-        hk_data[name] = {"ticker": "", **data}
+    try:
+        hk_stock_data = stock_data.get_hk_stock_data()
+        us_stock_data = stock_data.get_us_stock_data()
+        indices_data = stock_data.get_market_indices()
 
-    us_data = {}
-    for name, data in STOCK_PRICE_CACHE["美股"].items():
-        us_data[name] = {"ticker": "", **data}
+        stock_data_combined = {
+            'hk': hk_stock_data,
+            'us': us_stock_data
+        }
 
-    stock_data_combined = {
-        'hk': hk_data,
-        'us': us_data
-    }
-    indices_data = STOCK_PRICE_CACHE["指数"]
+        print(f"   港股数据: {len(hk_stock_data)} 只")
+        print(f"   美股数据: {len(us_stock_data)} 只")
+    except Exception as e:
+        print(f"   获取股价数据失败，使用缓存: {e}")
+        hk_data = {}
+        for name, data in STOCK_PRICE_CACHE["港股"].items():
+            hk_data[name] = {"ticker": "", **data}
+        us_data = {}
+        for name, data in STOCK_PRICE_CACHE["美股"].items():
+            us_data[name] = {"ticker": "", **data}
+        stock_data_combined = {
+            'hk': hk_data,
+            'us': us_data
+        }
+        indices_data = STOCK_PRICE_CACHE["指数"]
 
-    print(f"   港股数据: {len(hk_data)} 只")
-    print(f"   美股数据: {len(us_data)} 只")
     print()
 
     # 2. 获取高质量财经新闻（已分类）
