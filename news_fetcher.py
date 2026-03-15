@@ -46,6 +46,155 @@ STOCK_KEYWORDS = {
 }
 
 
+# ============================================
+# 新闻筛选权重配置
+# ============================================
+
+# 持仓股票权重（个股相关性 40%）
+STOCK_PRIORITY = {
+    # P0 - 持仓
+    "腾讯": 40, "美团": 40, "拼多多": 40, "泡泡玛特": 40,
+    # P1 - 重点关注
+    "英伟达": 30, "理想汽车": 30,
+    # P2 - 关注
+    "亚马逊": 20, "谷歌": 20, "微软": 20, "苹果": 20,
+    # P3 - 扩展关注
+    "比亚迪": 10, "寒武纪": 10, "特斯拉": 10, "阿里巴巴": 10,
+}
+
+# 行业热点权重（25%）
+INDUSTRY_KEYWORDS = {
+    "AI/人工智能": 25, "大模型": 25, "ChatGPT": 25, "LLM": 25,
+    "半导体": 20, "芯片": 20, "GPU": 20, "英伟达": 20,
+    "互联网": 15, "科技": 15, "云计算": 15,
+    "新能源车": 15, "电动汽车": 15, "电动车": 15,
+    "消费": 10, "零售": 10, "电商": 10,
+    "金融": 5, "银行": 5, "股市": 5,
+}
+
+# 新闻来源权重（15%）
+SOURCE_WEIGHTS = {
+    "财新网": 15,
+    "华尔街见闻": 12,
+    "新浪财经": 8,
+    "yfinance": 5,
+}
+
+# 新闻类型权重（10%）
+TYPE_KEYWORDS = {
+    "政策": 10, "监管": 10, "证监会": 10, "央行": 10,
+    "财报": 10, "业绩": 10, "扭亏": 10, "盈利": 10,
+    "暴涨": 10, "暴跌": 10, "突破": 10, "重磅": 10,
+    "分析师": 5, "观点": 5, "预测": 5,
+}
+
+
+def get_stock_score(title: str) -> float:
+    """计算个股相关性得分"""
+    title_lower = title.lower()
+    max_score = 0
+
+    for stock_name, priority in STOCK_PRIORITY.items():
+        keywords = STOCK_KEYWORDS.get(stock_name, [])
+        for keyword in keywords:
+            if keyword.lower() in title_lower:
+                max_score = max(max_score, priority)
+                break
+
+    return max_score
+
+
+def get_industry_score(title: str, tags: list) -> float:
+    """计算行业热点得分"""
+    title_lower = title.lower()
+    text = title_lower + " " + " ".join(tags)
+    max_score = 0
+
+    for keyword, score in INDUSTRY_KEYWORDS.items():
+        if keyword.lower() in text:
+            max_score = max(max_score, score)
+
+    return max_score
+
+
+def get_source_score(source: str) -> float:
+    """计算来源可信度得分"""
+    return SOURCE_WEIGHTS.get(source, 5)
+
+
+def get_type_score(title: str) -> float:
+    """计算新闻类型得分"""
+    title_lower = title.lower()
+    max_score = 2  # 默认基础分
+
+    for keyword, score in TYPE_KEYWORDS.items():
+        if keyword.lower() in title_lower:
+            max_score = max(max_score, score)
+
+    return max_score
+
+
+def get_time_score(pub_date: str) -> float:
+    """计算发布时间得分"""
+    try:
+        news_date = datetime.strptime(pub_date, "%Y-%m-%d").date()
+        today = datetime.now().date()
+        days_diff = (today - news_date).days
+
+        if days_diff == 0:
+            return 10
+        elif days_diff == 1:
+            return 5
+        else:
+            return 0
+    except:
+        return 2
+
+
+def calculate_news_score(news: dict) -> float:
+    """计算新闻综合评分"""
+    score = 0
+
+    # 1. 个股相关性 (40%)
+    score += get_stock_score(news.get('title', ''))
+
+    # 2. 行业热点 (25%)
+    score += get_industry_score(news.get('title', ''), news.get('tags', []))
+
+    # 3. 来源可信度 (15%)
+    score += get_source_score(news.get('source', ''))
+
+    # 4. 新闻类型 (10%)
+    score += get_type_score(news.get('title', ''))
+
+    # 5. 发布时间 (10%)
+    score += get_time_score(news.get('pub_date', ''))
+
+    return score
+
+
+def filter_news(news_list: list, top_n: int = 12) -> list:
+    """筛选高质量新闻"""
+    if not news_list:
+        return []
+
+    # 计算每条新闻的分数
+    scored_news = [(news, calculate_news_score(news)) for news in news_list]
+
+    # 排序
+    scored_news.sort(key=lambda x: x[1], reverse=True)
+
+    # 取 Top N
+    filtered = [news for news, score in scored_news[:top_n]]
+
+    # 记录评分日志
+    print(f"   📊 新闻评分示例:")
+    for i, (news, score) in enumerate(scored_news[:5]):
+        print(f"      {i+1}. [{score:>5.1f}分] {news['title'][:40]}...")
+
+    return filtered
+
+
 # 高质量财经新闻数据（财新 + 新浪财经）
 HIGH_QUALITY_NEWS = [
     # 财新网新闻
@@ -304,13 +453,17 @@ def get_financial_news() -> tuple:
     """获取高质量财经新闻，返回(个股相关新闻, 综合财经新闻)
 
     优先使用实时抓取的新闻，备用使用静态新闻
+    使用智能评分算法筛选高质量新闻
     """
     # 优先尝试实时抓取
     live_news = fetch_live_news(days=2)
 
     if live_news:
-        # 使用实时新闻
+        # 使用实时新闻并筛选
         print(f"   ✅ 使用实时新闻: {len(live_news)} 条")
+        print(f"   🔍 开始智能筛选...")
+
+        # 先分类
         stock_related_news = []
         general_news = []
 
@@ -323,7 +476,13 @@ def get_financial_news() -> tuple:
                 news['stock'] = ''
                 general_news.append(news)
 
-        return stock_related_news, general_news
+        # 智能筛选：保证持仓股票新闻 + 高分综合新闻
+        final_stock_news = filter_news(stock_related_news, top_n=8)
+        final_general_news = filter_news(general_news, top_n=8)
+
+        print(f"   ✨ 筛选结果: 个股新闻 {len(final_stock_news)} 条, 综合新闻 {len(final_general_news)} 条")
+
+        return final_stock_news, final_general_news
 
     # 降级：使用静态新闻
     print("   ⚠️ 实时抓取失败，使用静态新闻备用")
@@ -348,7 +507,11 @@ def get_financial_news() -> tuple:
             news_item['stock'] = ''
             general_news.append(news_item)
 
-    return stock_related_news, general_news
+    # 筛选
+    final_stock_news = filter_news(stock_related_news, top_n=8)
+    final_general_news = filter_news(general_news, top_n=8)
+
+    return final_stock_news, final_general_news
 
 
 def main():
