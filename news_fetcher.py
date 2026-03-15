@@ -5,8 +5,11 @@
 """
 
 import yfinance as yf
+import requests
 from datetime import datetime, timedelta
 from typing import List, Dict
+import time
+import random
 
 # 重点公司列表
 HONGKONG_STOCKS = {
@@ -85,6 +88,135 @@ HIGH_QUALITY_NEWS = [
     {"title": "美元指数突破100关口，为去年11月以来首次", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/livenews/3069474", "tags": ["美元", "美元指数", "外汇"]},
     {"title": "中东冲突引爆全球\"赤字恐慌\"：30年期美债收益率逼近4.9%", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767417", "tags": ["中东", "美债", "收益率"]},
 ]
+
+
+def fetch_sina_finance_news(days: int = 2) -> List[Dict]:
+    """从新浪财经抓取新闻"""
+    news_list = []
+
+    # 多个财经新闻页面
+    urls = [
+        'https://finance.sina.com.cn/stock/',
+        'https://finance.sina.com.cn/fortune/',
+    ]
+
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        }
+
+        for url in urls:
+            try:
+                response = requests.get(url, headers=headers, timeout=8)
+                response.encoding = 'utf-8'
+
+                if response.status_code == 200:
+                    import re
+                    # 匹配新闻标题和链接 - 更精确的模式
+                    pattern = r'<a[^>]+href="(https?://finance\.sina\.com\.cn/(?:stock|fortune|jj)/[^"]+)"[^>]*>([^<]{10,})</a>'
+                    matches = re.findall(pattern, response.text)
+
+                    today = datetime.now().date()
+
+                    seen_links = set()
+                    for link, title in matches:
+                        # 过滤掉太短或太宽泛的标题
+                        if len(title) > 12 and '更多' not in title and '详情' not in title and link not in seen_links:
+                            seen_links.add(link)
+                            news_list.append({
+                                'title': title.strip(),
+                                'link': link,
+                                'pub_date': today.strftime('%Y-%m-%d'),
+                                'publisher': '新浪财经',
+                                'source': '新浪财经',
+                                'tags': []
+                            })
+
+                    # 每个页面限制数量
+                    if len(news_list) >= 20:
+                        break
+
+            except Exception as e:
+                continue
+
+    except Exception as e:
+        print(f"   ⚠️ 新浪财经抓取失败: {e}")
+
+    # 去重
+    unique_news = []
+    seen_titles = set()
+    for news in news_list:
+        title = news['title'].strip()
+        if title not in seen_titles and len(title) > 12:
+            seen_titles.add(title)
+            unique_news.append(news)
+
+    return unique_news[:20]  # 限制数量
+
+
+def fetch_wallstreetcn_news(days: int = 2) -> List[Dict]:
+    """从华尔街见闻抓取新闻（使用备用数据源）"""
+    # 华尔街见闻主站使用 JavaScript 渲染，直接抓取效果不好
+    # 返回备用数据
+    news_list = []
+
+    # 从财新网抓取（华尔街见闻的姊妹站）
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+            'Referer': 'https://www.caixin.com/'
+        }
+
+        response = requests.get('https://www.caixin.com/', headers=headers, timeout=10)
+        response.encoding = 'utf-8'
+
+        if response.status_code == 200:
+            import re
+            # 匹配新闻标题和链接
+            pattern = r'<a[^>]+href="(https?://[^\"]+)"[^>]*>([^<]{10,})</a>'
+            matches = re.findall(pattern, response.text)
+
+            today = datetime.now().date()
+            seen_links = set()
+
+            for link, title in matches:
+                if 'caixin.com' in link and len(title) > 8 and link not in seen_links:
+                    seen_links.add(link)
+                    news_list.append({
+                        'title': title.strip(),
+                        'link': link,
+                        'pub_date': today.strftime('%Y-%m-%d'),
+                        'publisher': '财新网',
+                        'source': '财新网',
+                        'tags': []
+                    })
+
+    except Exception as e:
+        print(f"   ⚠️ 财新网抓取失败: {e}")
+
+    return news_list[:15]
+
+
+def fetch_live_news(days: int = 2) -> List[Dict]:
+    """从多个来源实时抓取新闻"""
+    all_news = []
+
+    print("   📡 正在实时抓取财经新闻...")
+
+    # 抓取新浪财经
+    sina_news = fetch_sina_finance_news(days)
+    print(f"      新浪财经: 获取 {len(sina_news)} 条")
+    all_news.extend(sina_news)
+
+    # 短暂休息避免被封
+    time.sleep(0.5 + random.uniform(0, 0.5))
+
+    # 抓取华尔街见闻
+    wscn_news = fetch_wallstreetcn_news(days)
+    print(f"      华尔街见闻: 获取 {len(wscn_news)} 条")
+    all_news.extend(wscn_news)
+
+    return all_news
 
 
 def is_stock_related(news_title: str) -> tuple:
@@ -169,7 +301,32 @@ def get_all_us_news(days: int = 3) -> Dict[str, List[Dict]]:
 
 
 def get_financial_news() -> tuple:
-    """获取高质量财经新闻，返回(个股相关新闻, 综合财经新闻)"""
+    """获取高质量财经新闻，返回(个股相关新闻, 综合财经新闻)
+
+    优先使用实时抓取的新闻，备用使用静态新闻
+    """
+    # 优先尝试实时抓取
+    live_news = fetch_live_news(days=2)
+
+    if live_news:
+        # 使用实时新闻
+        print(f"   ✅ 使用实时新闻: {len(live_news)} 条")
+        stock_related_news = []
+        general_news = []
+
+        for news in live_news:
+            is_related, stock_name = is_stock_related(news['title'])
+            if is_related:
+                news['stock'] = stock_name
+                stock_related_news.append(news)
+            else:
+                news['stock'] = ''
+                general_news.append(news)
+
+        return stock_related_news, general_news
+
+    # 降级：使用静态新闻
+    print("   ⚠️ 实时抓取失败，使用静态新闻备用")
     stock_related_news = []
     general_news = []
 
