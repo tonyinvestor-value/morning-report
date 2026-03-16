@@ -74,7 +74,7 @@ INDUSTRY_KEYWORDS = {
 
 # 新闻来源权重（15%）
 SOURCE_WEIGHTS = {
-    "财新网": 15,
+    "财新网": 25,
     "华尔街见闻": 12,
     "新浪财经": 8,
     "yfinance": 5,
