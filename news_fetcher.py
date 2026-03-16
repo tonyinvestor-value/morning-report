@@ -449,19 +449,25 @@ def get_all_us_news(days: int = 3) -> Dict[str, List[Dict]]:
     return results
 
 
-def get_financial_news() -> tuple:
+def get_financial_news(existing_links: set = None) -> tuple:
     """获取高质量财经新闻，返回(个股相关新闻, 综合财经新闻)
 
     优先使用实时抓取的新闻，备用使用静态新闻
     使用智能评分算法筛选高质量新闻
+
+    Args:
+        existing_links: 已存在的新闻链接集合，用于去重
     """
+    if existing_links is None:
+        existing_links = set()
+
     # 优先尝试实时抓取
     live_news = fetch_live_news(days=2)
 
     if live_news:
         # 使用实时新闻并筛选
         print(f"   ✅ 使用实时新闻: {len(live_news)} 条")
-        print(f"   🔍 开始智能筛选...")
+        print(f"   🔍 开始智能筛选和去重...")
 
         # 先分类
         stock_related_news = []
@@ -476,9 +482,15 @@ def get_financial_news() -> tuple:
                 news['stock'] = ''
                 general_news.append(news)
 
+        # 去重：个股新闻和综合新闻分开去重
+        if existing_links:
+            stock_related_news = [n for n in stock_related_news if n.get('link', '') not in existing_links]
+            general_news = [n for n in general_news if n.get('link', '') not in existing_links]
+            print(f"   🔄 去重后: 个股新闻 {len(stock_related_news)} 条, 综合新闻 {len(general_news)} 条")
+
         # 智能筛选：保证持仓股票新闻 + 高分综合新闻
         final_stock_news = filter_news(stock_related_news, top_n=8)
-        final_general_news = filter_news(general_news, top_n=8)
+        final_general_news = filter_news(general_news, top_n=12)  # 10-15条
 
         print(f"   ✨ 筛选结果: 个股新闻 {len(final_stock_news)} 条, 综合新闻 {len(final_general_news)} 条")
 
@@ -507,9 +519,14 @@ def get_financial_news() -> tuple:
             news_item['stock'] = ''
             general_news.append(news_item)
 
+    # 去重
+    if existing_links:
+        stock_related_news = [n for n in stock_related_news if n.get('link', '') not in existing_links]
+        general_news = [n for n in general_news if n.get('link', '') not in existing_links]
+
     # 筛选
     final_stock_news = filter_news(stock_related_news, top_n=8)
-    final_general_news = filter_news(general_news, top_n=8)
+    final_general_news = filter_news(general_news, top_n=12)
 
     return final_stock_news, final_general_news
 

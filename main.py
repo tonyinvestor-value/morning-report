@@ -249,9 +249,10 @@ def main():
     # 先读取历史新闻链接进行去重
     print("   🔍 检查历史新闻...")
     existing_links = get_existing_news_links(days=2)
+    print(f"   📄 历史新闻链接: {len(existing_links)} 个")
 
-    # 获取分类新闻
-    stock_related_news, general_news = news_fetcher.get_financial_news()
+    # 获取分类新闻（传入已存在的链接进行去重）
+    stock_related_news, general_news = news_fetcher.get_financial_news(existing_links)
 
     # 获取个股新闻（从yfinance）
     print("   📊 正在获取个股新闻...")
