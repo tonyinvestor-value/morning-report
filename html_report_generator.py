@@ -14,7 +14,8 @@ HONGKONG_STOCKS = {
     "腾讯": ("00700", "0700.HK"),
     "美团": ("03690", "3690.HK"),
     "理想汽车": ("02015", "2015.HK"),
-    "泡泡玛特": ("09992", "9992.HK")
+    "泡泡玛特": ("09992", "9992.HK"),
+    "携程": ("09961", "9961.HK")
 }
 
 US_STOCKS = {
@@ -107,41 +108,11 @@ def generate_stock_summary(name: str, period_data: dict) -> str:
 
 
 def generate_prediction(rsi_14: float, change_5d: float, momentum_30: float, bollinger: dict = None) -> str:
-    """基于技术指标预测未来走势 - 大白话版
+    """基于布林带技术指标预测未来走势 - 只保留布林带
 
-    用近5日涨跌幅(change_5d)作为短期动量
+    用近5日涨跌幅(change_5d)作为辅助判断趋势方向
     """
-    if rsi_14 is None and change_5d is None:
-        return "数据不足"
-
-    # ========== 1. 短期涨跌判断（用近5日）==========
-    if change_5d is not None:
-        if change_5d > 5:
-            trend = "最近涨得不错"
-        elif change_5d > 0:
-            trend = "最近小幅上涨"
-        elif change_5d < -5:
-            trend = "最近跌得厉害"
-        elif change_5d < 0:
-            trend = "最近小幅下跌"
-        else:
-            trend = "最近没涨没跌"
-    else:
-        trend = "趋势不明"
-
-    # ========== 2. RSI信号（大白话）==========
-    rsi_msg = ""
-    if rsi_14 is not None:
-        if rsi_14 < 30:
-            rsi_msg = "价格偏低，可能要反弹"
-        elif rsi_14 > 70:
-            rsi_msg = "价格偏高，可能要回调"
-        elif rsi_14 < 45:
-            rsi_msg = "价格偏弱"
-        elif rsi_14 > 55:
-            rsi_msg = "价格偏强"
-
-    # ========== 3. 布林带信号（大白话）==========
+    # 布林带信号（大白话）
     bb_msg = ""
     if bollinger:
         if bollinger.get("squeeze"):
@@ -157,14 +128,10 @@ def generate_prediction(rsi_14: float, change_5d: float, momentum_30: float, bol
         elif bollinger.get("at_lower"):
             bb_msg = "快到底了" if not bb_msg else bb_msg + "，快到底了"
 
-    # ========== 4. 拼成大白话（不要结论）==========
-    parts = [trend]
-    if rsi_msg:
-        parts.append(rsi_msg)
-    if bb_msg:
-        parts.append(bb_msg)
+    if not bb_msg:
+        return "数据不足"
 
-    return "。".join(parts)
+    return bb_msg
 
 
 def generate_trend_summary(change_5d: float, change_30d: float, change_90d: float) -> str:
