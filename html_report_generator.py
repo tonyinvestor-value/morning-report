@@ -541,11 +541,118 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
         .strategy li {{
             margin-bottom: 8px;
         }}
+        .bollinger-guide {{
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: left;
+        }}
+        .bollinger-guide h4 {{
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }}
+        .bollinger-guide ul {{
+            margin-left: 20px;
+            color: #555;
+            line-height: 1.8;
+        }}
+        .bollinger-guide li {{
+            margin-bottom: 8px;
+        }}
         .footer {{
             text-align: center;
             color: #aaa;
             padding: 20px;
             font-size: 0.9em;
+        }}
+        /* ==================== 响应式布局 ==================== */
+        /* 手机端适配 */
+        @media screen and (max-width: 768px) {{
+            body {{
+                padding: 10px;
+            }}
+            .header {{
+                padding: 20px 10px;
+            }}
+            .header h1 {{
+                font-size: 1.5em;
+            }}
+            .header .date {{
+                font-size: 0.9em;
+            }}
+            .disclaimer {{
+                padding: 12px;
+                font-size: 0.85em;
+            }}
+            table {{
+                font-size: 0.8em;
+            }}
+            th, td {{
+                padding: 8px 4px;
+            }}
+            .stock-name {{
+                font-size: 0.9em;
+            }}
+            .price {{
+                font-size: 0.85em;
+            }}
+            .change {{
+                font-size: 0.85em;
+            }}
+            .prediction {{
+                font-size: 0.75em;
+            }}
+            .trend-summary {{
+                font-size: 0.75em;
+            }}
+            .news-item {{
+                padding: 12px;
+            }}
+            .news-title {{
+                font-size: 0.9em;
+            }}
+            .news-meta {{
+                font-size: 0.75em;
+            }}
+            .footer {{
+                font-size: 0.8em;
+                padding: 15px 10px;
+            }}
+            .bollinger-guide {{
+                text-align: left;
+                padding: 15px;
+                font-size: 0.85em;
+            }}
+            .bollinger-guide h4 {{
+                font-size: 1em;
+                margin-bottom: 10px;
+            }}
+            .bollinger-guide ul {{
+                margin-left: 15px;
+            }}
+            .bollinger-guide li {{
+                margin-bottom: 6px;
+            }}
+        }}
+        /* 更小的手机 */
+        @media screen and (max-width: 480px) {{
+            body {{
+                padding: 8px;
+            }}
+            .header h1 {{
+                font-size: 1.3em;
+            }}
+            table {{
+                font-size: 0.75em;
+            }}
+            th, td {{
+                padding: 6px 3px;
+            }}
+            .prediction, .trend-summary {{
+                font-size: 0.7em;
+            }}
         }}
     </style>
 </head>
@@ -630,10 +737,19 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
         <div class="footer">
             <p>🕐 信息时间范围：最近3天</p>
             <p>📊 数据来源：财新网、新浪财经、华尔街见闻</p>
-            <p>🎯 覆盖公司：港股4家 + 美股4家重点标的</p>
+            <p>🎯 覆盖公司：港股5家 + 美股4家重点标的</p>
             <p>💹 股价精度：收盘价/实时价，含涨跌幅和成交额</p>
             <hr style="margin: 15px 0; border: none; border-top: 1px solid #ddd;">
-            <p style="font-size: 0.85em; color: #999;">📈 预测说明：基于RSI(相对强弱)、近5日动量、布林带综合判断，仅供参考</p>
+            <div class="bollinger-guide">
+                <h4>📈 布林带是什么？</h4>
+                <ul>
+                    <li><strong>收窄(squeeze)</strong>：行情在盘整，即将选择方向</li>
+                    <li><strong>放大(expanding)</strong>：趋势加速中，可能持续涨/跌</li>
+                    <li><strong>触及上轨</strong>：价格偏高，快到天花板了</li>
+                    <li><strong>触及下轨</strong>：价格偏低，快到底了</li>
+                </ul>
+            </div>
+            <p style="font-size: 0.85em; color: #999; margin-top: 15px;">💡 预测说明：基于布林带技术指标判断，仅供参考</p>
         </div>
     </div>
 </body>
