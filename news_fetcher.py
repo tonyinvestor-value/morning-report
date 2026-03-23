@@ -76,7 +76,7 @@ INDUSTRY_KEYWORDS = {
 # 新闻来源权重（15%）
 SOURCE_WEIGHTS = {
     "财新网": 25,
-    "华尔街见闻": 12,
+    "财联社": 12,
     "新浪财经": 8,
     "yfinance": 5,
 }
@@ -222,21 +222,21 @@ HIGH_QUALITY_NEWS = [
     {"title": "微软股价持续下滑，5个月内市值蒸发1万亿美元", "source": "新浪财经", "pub_date": "2026-03-13", "link": "https://finance.sina.com.cn/stock/2026-03-13/doc-inhqvnzr4108832.shtml", "tags": ["微软", "美股", "科技"]},
     {"title": "港股午评：恒指跌0.48%，科指跌0.41%", "source": "新浪财经", "pub_date": "2026-03-13", "link": "https://finance.sina.com.cn/stock/hkstock/2026-03-13/", "tags": ["港股", "恒生指数"]},
 
-    # 华尔街见闻新闻（真实抓取）
-    {"title": "中国2月新增社融2.38万亿元，新增人民币贷款9000亿元，M2同比增长9%", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767449", "tags": ["社融", "金融", "中国"]},
-    {"title": "布油破百引爆通胀担忧，全球股市普跌，美元指数重回100关口，日元创20个月新低", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767392", "tags": ["原油", "股市", "美元"]},
-    {"title": "伊朗：袭击\"林肯\"号航母，已致其失去作战能力返回美国！美方：击中靠近航母的伊朗船只", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767425", "tags": ["伊朗", "中东", "地缘政治"]},
-    {"title": "商务部：中美经贸磋商将于3月14日-17日举行，正在分析评估301调查", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767421", "tags": ["中美关系", "贸易", "关税"]},
-    {"title": "金融监管总局约谈5家平台运营机构", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/livenews/3069682", "tags": ["金融监管", "平台"]},
-    {"title": "证监会：严厉打击财务造假、操纵市场、内幕交易、虚假陈述等违法违规行为", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767456", "tags": ["证监会", "监管", "股市"]},
-    {"title": "天风证券：因涉嫌信息披露违法违规、违法提供融资被罚1500万元", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/livenews/3069663", "tags": ["天风证券", "券商", "处罚"]},
-    {"title": "美债\"恐慌指数\"飙至九个月新高，美联储降息预期\"熄火\"", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767439", "tags": ["美债", "美联储", "降息"]},
-    {"title": "日本拟下周启动8000万桶石油释储，按中东冲突爆发前价格卖", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767447", "tags": ["日本", "石油", "能源"]},
-    {"title": "高盛再度上调短期油价目标：布油3月100、4月85美元", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767432", "tags": ["高盛", "油价", "能源"]},
-    {"title": "日元再度逼近160：避险资金涌入美元，日本干预的空间正在消失？", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767426", "tags": ["日元", "美元", "外汇"]},
-    {"title": "中国央行：3月16日将开展5000亿元买断式逆回购操作，期限为6个月", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/livenews/3069600", "tags": ["央行", "逆回购", "货币政策"]},
-    {"title": "美元指数突破100关口，为去年11月以来首次", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/livenews/3069474", "tags": ["美元", "美元指数", "外汇"]},
-    {"title": "中东冲突引爆全球\"赤字恐慌\"：30年期美债收益率逼近4.9%", "source": "华尔街见闻", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767417", "tags": ["中东", "美债", "收益率"]},
+    # 财联社新闻（真实抓取）
+    {"title": "中国2月新增社融2.38万亿元，新增人民币贷款9000亿元，M2同比增长9%", "source": "财联社", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767449", "tags": ["社融", "金融", "中国"]},
+    {"title": "布油破百引爆通胀担忧，全球股市普跌，美元指数重回100关口，日元创20个月新低", "source": "财联社", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767392", "tags": ["原油", "股市", "美元"]},
+    {"title": "伊朗：袭击\"林肯\"号航母，已致其失去作战能力返回美国！美方：击中靠近航母的伊朗船只", "source": "财联社", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767425", "tags": ["伊朗", "中东", "地缘政治"]},
+    {"title": "商务部：中美经贸磋商将于3月14日-17日举行，正在分析评估301调查", "source": "财联社", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767421", "tags": ["中美关系", "贸易", "关税"]},
+    {"title": "金融监管总局约谈5家平台运营机构", "source": "财联社", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/livenews/3069682", "tags": ["金融监管", "平台"]},
+    {"title": "证监会：严厉打击财务造假、操纵市场、内幕交易、虚假陈述等违法违规行为", "source": "财联社", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767456", "tags": ["证监会", "监管", "股市"]},
+    {"title": "天风证券：因涉嫌信息披露违法违规、违法提供融资被罚1500万元", "source": "财联社", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/livenews/3069663", "tags": ["天风证券", "券商", "处罚"]},
+    {"title": "美债\"恐慌指数\"飙至九个月新高，美联储降息预期\"熄火\"", "source": "财联社", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767439", "tags": ["美债", "美联储", "降息"]},
+    {"title": "日本拟下周启动8000万桶石油释储，按中东冲突爆发前价格卖", "source": "财联社", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767447", "tags": ["日本", "石油", "能源"]},
+    {"title": "高盛再度上调短期油价目标：布油3月100、4月85美元", "source": "财联社", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767432", "tags": ["高盛", "油价", "能源"]},
+    {"title": "日元再度逼近160：避险资金涌入美元，日本干预的空间正在消失？", "source": "财联社", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767426", "tags": ["日元", "美元", "外汇"]},
+    {"title": "中国央行：3月16日将开展5000亿元买断式逆回购操作，期限为6个月", "source": "财联社", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/livenews/3069600", "tags": ["央行", "逆回购", "货币政策"]},
+    {"title": "美元指数突破100关口，为去年11月以来首次", "source": "财联社", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/livenews/3069474", "tags": ["美元", "美元指数", "外汇"]},
+    {"title": "中东冲突引爆全球\"赤字恐慌\"：30年期美债收益率逼近4.9%", "source": "财联社", "pub_date": "2026-03-12", "link": "https://wallstreetcn.com/articles/3767417", "tags": ["中东", "美债", "收益率"]},
 ]
 
 
@@ -304,45 +304,56 @@ def fetch_sina_finance_news(days: int = 2) -> List[Dict]:
     return unique_news[:20]  # 限制数量
 
 
-def fetch_wallstreetcn_news(days: int = 2) -> List[Dict]:
-    """从华尔街见闻抓取新闻（使用备用数据源）"""
-    # 华尔街见闻主站使用 JavaScript 渲染，直接抓取效果不好
+def fetch_cls_news(days: int = 2) -> List[Dict]:
+    """从财联社抓取新闻（使用备用数据源）"""
+    # 财联社主站使用 JavaScript 渲染，直接抓取效果不好
     # 返回备用数据
     news_list = []
 
-    # 从财新网抓取（华尔街见闻的姊妹站）
+    # 从新浪财经抓取作为备用
     try:
         headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-            'Referer': 'https://www.caixin.com/'
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         }
 
-        response = requests.get('https://www.caixin.com/', headers=headers, timeout=10)
-        response.encoding = 'utf-8'
+        urls = [
+            'https://finance.sina.com.cn/stock/',
+            'https://finance.sina.com.cn/fortune/',
+        ]
 
-        if response.status_code == 200:
-            import re
-            # 匹配新闻标题和链接
-            pattern = r'<a[^>]+href="(https?://[^\"]+)"[^>]*>([^<]{10,})</a>'
-            matches = re.findall(pattern, response.text)
+        for url in urls:
+            try:
+                response = requests.get(url, headers=headers, timeout=8)
+                response.encoding = 'utf-8'
 
-            today = datetime.now().date()
-            seen_links = set()
+                if response.status_code == 200:
+                    import re
+                    pattern = r'<a[^>]+href="(https?://finance\.sina\.com\.cn/(?:stock|fortune|jj)/[^"]+)"[^>]*>([^<]{10,})</a>'
+                    matches = re.findall(pattern, response.text)
 
-            for link, title in matches:
-                if 'caixin.com' in link and len(title) > 8 and link not in seen_links:
-                    seen_links.add(link)
-                    news_list.append({
-                        'title': title.strip(),
-                        'link': link,
-                        'pub_date': today.strftime('%Y-%m-%d'),
-                        'publisher': '财新网',
-                        'source': '财新网',
-                        'tags': []
-                    })
+                    today = datetime.now().date()
+                    seen_links = set()
+
+                    for link, title in matches:
+                        if len(title) > 12 and '更多' not in title and '详情' not in title and link not in seen_links:
+                            seen_links.add(link)
+                            news_list.append({
+                                'title': title.strip(),
+                                'link': link,
+                                'pub_date': today.strftime('%Y-%m-%d'),
+                                'publisher': '财联社',
+                                'source': '财联社',
+                                'tags': []
+                            })
+
+                    if len(news_list) >= 15:
+                        break
+
+            except Exception as e:
+                continue
 
     except Exception as e:
-        print(f"   ⚠️ 财新网抓取失败: {e}")
+        print(f"   ⚠️ 财联社(备用)抓取失败: {e}")
 
     return news_list[:15]
 
@@ -361,10 +372,10 @@ def fetch_live_news(days: int = 2) -> List[Dict]:
     # 短暂休息避免被封
     time.sleep(0.5 + random.uniform(0, 0.5))
 
-    # 抓取华尔街见闻
-    wscn_news = fetch_wallstreetcn_news(days)
-    print(f"      华尔街见闻: 获取 {len(wscn_news)} 条")
-    all_news.extend(wscn_news)
+    # 抓取财联社
+    cls_news = fetch_cls_news(days)
+    print(f"      财联社: 获取 {len(cls_news)} 条")
+    all_news.extend(cls_news)
 
     return all_news
 

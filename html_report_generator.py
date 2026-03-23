@@ -489,10 +489,13 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
         .news-source {{
             background: #1976d2;
             color: #fff;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            white-space: nowrap;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            display: inline-block;
+            text-align: center;
+            min-width: 50px;
+            font-weight: 500;
         }}
         .news-title {{
             flex: 1;
@@ -593,7 +596,7 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
                 padding: 8px 4px;
             }}
             .stock-name {{
-                font-size: 0.9em;
+                font-size: 1.05em;
             }}
             .price {{
                 font-size: 0.85em;
