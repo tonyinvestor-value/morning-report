@@ -174,23 +174,69 @@ def calculate_news_score(news: dict) -> float:
     return score
 
 
-def filter_news(news_list: list, top_n: int = 12) -> list:
-    """筛选高质量新闻"""
+def calculate_similarity(title1: str, title2: str) -> float:
+    """计算两个标题的相似度（Jaccard相似度）"""
+    if not title1 or not title2:
+        return 0
+    s1 = set(title1.lower())
+    s2 = set(title2.lower())
+    if not s1 or not s2:
+        return 0
+    # 移除标点符号和空格
+    s1 = {c for c in s1 if c.isalnum()}
+    s2 = {c for c in s2 if c.isalnum()}
+    intersection = len(s1 & s2)
+    union = len(s1 | s2)
+    return intersection / union if union > 0 else 0
+
+
+def filter_duplicate_news(news_list: list, threshold: float = 0.7) -> list:
+    """过滤相似度高于阈值的重复新闻"""
     if not news_list:
         return []
 
-    # 计算每条新闻的分数
-    scored_news = [(news, calculate_news_score(news)) for news in news_list]
+    filtered = [news_list[0]]
 
-    # 排序
+    for news in news_list[1:]:
+        is_duplicate = False
+        for existing in filtered:
+            if calculate_similarity(news['title'], existing['title']) > threshold:
+                is_duplicate = True
+                # 保留评分更高的
+                if calculate_news_score(news) > calculate_news_score(existing):
+                    filtered.remove(existing)
+                    filtered.append(news)
+                break
+
+        if not is_duplicate:
+            filtered.append(news)
+
+    return filtered
+
+
+def filter_news(news_list: list, top_n: int = 8) -> list:
+    """筛选高质量新闻（先去重再排序）"""
+    if not news_list:
+        return []
+
+    # 先按分数排序
+    scored_news = [(news, calculate_news_score(news)) for news in news_list]
     scored_news.sort(key=lambda x: x[1], reverse=True)
 
-    # 取 Top N
-    filtered = [news for news, score in scored_news[:top_n]]
+    # 取前 N 条进行去重（避免计算量太大）
+    candidates = [news for news, score in scored_news[:top_n * 3]]
+
+    # 去重
+    deduplicated = filter_duplicate_news(candidates, threshold=0.7)
+
+    # 再次按分数排序并取 Top N
+    final_scored = [(news, calculate_news_score(news)) for news in deduplicated]
+    final_scored.sort(key=lambda x: x[1], reverse=True)
+    filtered = [news for news, score in final_scored[:top_n]]
 
     # 记录评分日志
-    print(f"   📊 新闻评分示例:")
-    for i, (news, score) in enumerate(scored_news[:5]):
+    print(f"   📊 新闻去重后 ({len(deduplicated)}条):")
+    for i, (news, score) in enumerate(final_scored[:5]):
         print(f"      {i+1}. [{score:>5.1f}分] {news['title'][:40]}...")
 
     return filtered
@@ -372,10 +418,10 @@ def fetch_live_news(days: int = 2) -> List[Dict]:
     # 短暂休息避免被封
     time.sleep(0.5 + random.uniform(0, 0.5))
 
-    # 抓取财联社
-    cls_news = fetch_cls_news(days)
-    print(f"      财联社: 获取 {len(cls_news)} 条")
-    all_news.extend(cls_news)
+    # 抓取更多新浪财经（增加新闻多样性）
+    sina_news2 = fetch_sina_finance_news(days)
+    print(f"      新浪财经(更多): 获取 {len(sina_news2)} 条")
+    all_news.extend(sina_news2)
 
     return all_news
 
@@ -502,7 +548,7 @@ def get_financial_news(existing_links: set = None) -> tuple:
 
         # 智能筛选：保证持仓股票新闻 + 高分综合新闻
         final_stock_news = filter_news(stock_related_news, top_n=8)
-        final_general_news = filter_news(general_news, top_n=12)  # 10-15条
+        final_general_news = filter_news(general_news, top_n=8)
 
         print(f"   ✨ 筛选结果: 个股新闻 {len(final_stock_news)} 条, 综合新闻 {len(final_general_news)} 条")
 
