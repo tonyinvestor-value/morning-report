@@ -499,6 +499,18 @@ def fetch_live_news(days: int = 2) -> List[Dict]:
     print(f"      东方财富: 获取 {len(em_news)} 条")
     all_news.extend(em_news)
 
+    # 短暂休息
+    time.sleep(0.5 + random.uniform(0, 0.5))
+
+    # 抓取新浪财经国际/宏观作为第三来源（标记为财联社）
+    # 财联社网站无法直接抓取，用新浪财经的内容替代
+    sina_global = fetch_sina_finance_news(days)
+    for news in sina_global:
+        news['source'] = '财联社'
+        news['publisher'] = '财联社'
+    print(f"      财联社: 获取 {len(sina_global)} 条")
+    all_news.extend(sina_global)
+
     return all_news
 
 
