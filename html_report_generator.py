@@ -313,27 +313,45 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
     else:
         stock_news_html = '<p>暂无个股相关新闻</p>'
 
-    # 综合财经新闻HTML
+    # 综合财经新闻HTML - 按来源分组
     general_news_html = ""
     if general_news_list:
-        for news in general_news_list[:20]:
-            link = news.get('link', '')
-            title = news.get('title', '暂无标题')
+        # 按来源分组
+        sources = {}
+        for news in general_news_list:
             source = news.get('source', '未知')
-            pub_date = news.get('pub_date', '')
+            if source not in sources:
+                sources[source] = []
+            sources[source].append(news)
 
-            if link:
-                general_news_html += f'''        <li>
-            <span class="news-source">{source}</span>
-            <a href="{link}" target="_blank" class="news-title">{title}</a>
-            <span class="news-time">{pub_date}</span>
-        </li>'''
-            else:
-                general_news_html += f'''        <li>
-            <span class="news-source">{source}</span>
-            <span class="news-title">{title}</span>
-            <span class="news-time">{pub_date}</span>
-        </li>'''
+        # 按来源生成 HTML
+        for source, news_list in sources.items():
+            general_news_html += f'''
+        <div class="news-section">
+            <h3>📰 {source}</h3>
+            <ul class="news-list">'''
+
+            for news in news_list:
+                link = news.get('link', '')
+                title = news.get('title', '暂无标题')
+                pub_date = news.get('pub_date', '')
+
+                if link:
+                    general_news_html += f'''
+                <li>
+                    <a href="{link}" target="_blank" class="news-title">{title}</a>
+                    <span class="news-time">{pub_date}</span>
+                </li>'''
+                else:
+                    general_news_html += f'''
+                <li>
+                    <span class="news-title">{title}</span>
+                    <span class="news-time">{pub_date}</span>
+                </li>'''
+
+            general_news_html += '''
+            </ul>
+        </div>'''
     else:
         general_news_html = "        <li>暂无新闻</li>"
 
@@ -528,6 +546,16 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
             margin: 0 0 10px 0;
             color: #1976d2;
             font-size: 1.1em;
+        }}
+        .news-section {{
+            margin-bottom: 25px;
+        }}
+        .news-section h3 {{
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1976d2;
         }}
         .stock-news-group .news-list {{
             margin: 0;
