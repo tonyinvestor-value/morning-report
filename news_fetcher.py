@@ -214,32 +214,56 @@ def filter_duplicate_news(news_list: list, threshold: float = 0.7) -> list:
     return filtered
 
 
-def filter_news(news_list: list, top_n: int = 8) -> list:
-    """筛选高质量新闻（先去重再排序）"""
+def filter_news(news_list: list, top_n: int = 8, min_per_source: int = 2) -> list:
+    """筛选高质量新闻（保证每来源至少min_per_source条）"""
     if not news_list:
         return []
 
-    # 先按分数排序
+    # 1. 先去重
     scored_news = [(news, calculate_news_score(news)) for news in news_list]
     scored_news.sort(key=lambda x: x[1], reverse=True)
-
-    # 取前 N 条进行去重（避免计算量太大）
     candidates = [news for news, score in scored_news[:top_n * 3]]
-
-    # 去重
     deduplicated = filter_duplicate_news(candidates, threshold=0.7)
 
-    # 再次按分数排序并取 Top N
-    final_scored = [(news, calculate_news_score(news)) for news in deduplicated]
-    final_scored.sort(key=lambda x: x[1], reverse=True)
-    filtered = [news for news, score in final_scored[:top_n]]
+    # 2. 按新闻源分组
+    sources = {}
+    for news in deduplicated:
+        source = news.get('source', '其他')
+        if source not in sources:
+            sources[source] = []
+        sources[source].append(news)
 
-    # 记录评分日志
-    print(f"   📊 新闻去重后 ({len(deduplicated)}条):")
-    for i, (news, score) in enumerate(final_scored[:5]):
-        print(f"      {i+1}. [{score:>5.1f}分] {news['title'][:40]}...")
+    # 3. 每组按分数排序，取前 min_per_source 条
+    result = []
+    source_counts = {}
+    for source, source_news in sources.items():
+        scored = [(n, calculate_news_score(n)) for n in source_news]
+        scored.sort(key=lambda x: x[1], reverse=True)
+        selected = [n for n, s in scored[:min_per_source]]
+        result.extend(selected)
+        source_counts[source] = len(selected)
 
-    return filtered
+    # 4. 如果不够8条，从剩余中补充
+    all_selected = set(id(n) for n in result)
+    remaining = [n for n in deduplicated if id(n) not in all_selected]
+    remaining_scored = [(n, calculate_news_score(n)) for n in remaining]
+    remaining_scored.sort(key=lambda x: x[1], reverse=True)
+
+    for n, s in remaining_scored[:top_n - len(result)]:
+        result.append(n)
+        source = n.get('source', '其他')
+        source_counts[source] = source_counts.get(source, 0) + 1
+
+    result = result[:top_n]
+
+    # 记录日志
+    source_info = ", ".join([f"{k}:{v}条" for k, v in source_counts.items()])
+    print(f"   📊 新闻来源分布: {source_info}")
+    print(f"   📊 筛选结果 ({len(result)}条):")
+    for i, news in enumerate(result[:5]):
+        print(f"      {i+1}. [{news.get('source', '')}] {news['title'][:35]}...")
+
+    return result
 
 
 # 高质量财经新闻数据（财新 + 新浪财经）
