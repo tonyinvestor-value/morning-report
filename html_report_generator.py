@@ -480,8 +480,9 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
             padding: 12px 0;
             border-bottom: 1px solid #eee;
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+            gap: 8px;
+            flex-wrap: nowrap;
+            align-items: flex-start;
         }}
         .news-list li:last-child {{
             border-bottom: none;
@@ -496,6 +497,7 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
             text-align: center;
             min-width: 50px;
             font-weight: 500;
+            flex-shrink: 0;
         }}
         .news-title {{
             flex: 1;
@@ -655,6 +657,15 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
             }}
             .prediction, .trend-summary {{
                 font-size: 0.7em;
+            }}
+            .news-list li {{
+                flex-wrap: wrap;
+                gap: 6px;
+            }}
+            .news-source {{
+                min-width: auto;
+                font-size: 0.7em;
+                padding: 3px 8px;
             }}
         }}
     </style>
