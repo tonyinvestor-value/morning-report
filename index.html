@@ -141,8 +141,9 @@
             padding: 12px 0;
             border-bottom: 1px solid #eee;
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+            gap: 8px;
+            flex-wrap: nowrap;
+            align-items: flex-start;
         }
         .news-list li:last-child {
             border-bottom: none;
@@ -157,6 +158,7 @@
             text-align: center;
             min-width: 50px;
             font-weight: 500;
+            flex-shrink: 0;
         }
         .news-title {
             flex: 1;
@@ -317,6 +319,15 @@
             .prediction, .trend-summary {
                 font-size: 0.7em;
             }
+            .news-list li {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .news-source {
+                min-width: auto;
+                font-size: 0.7em;
+                padding: 3px 8px;
+            }
         }
     </style>
 </head>
@@ -338,12 +349,12 @@
                             <tr>
             <td class="stock-name">腾讯(00700)</td>
             <td class="price-row">
-                💰 股价：499.00 港元 |
-                📈 涨跌：<span class="negative">-9.00 (-1.77%)</span>
+                💰 股价：498.60 港元 |
+                📈 涨跌：<span class="negative">-9.40 (-1.85%)</span>
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="news">行情在盘整，等方向 | 近5日 -9.31% | 近30日 -7.29% | 近90日 -17.14%</td>
+            <td colspan="2" class="news">行情在盘整，等方向 | 近5日 -9.35% | 近30日 -7.32% | 近90日 -17.18%</td>
         </tr>        <tr>
             <td class="stock-name">美团(03690)</td>
             <td class="price-row">
@@ -352,7 +363,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="news">行情在盘整，等方向 | 近5日 -3.81% | 近30日 -9.47% | 近90日 -25.44%</td>
+            <td colspan="2" class="news">行情在盘整，等方向 | 近5日 -3.75% | 近30日 -9.41% | 近90日 -25.39%</td>
         </tr>        <tr>
             <td class="stock-name">理想汽车(02015)</td>
             <td class="price-row">
@@ -370,16 +381,16 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="news">行情在盘整，等方向 | 近5日 -6.69% | 近30日 -19.08% | 近90日 +0.30%</td>
+            <td colspan="2" class="news">行情在盘整，等方向 | 近5日 -6.78% | 近30日 -19.16% | 近90日 +0.20%</td>
         </tr>        <tr>
             <td class="stock-name">携程(09961)</td>
             <td class="price-row">
-                💰 股价：393.80 港元 |
-                📈 涨跌：<span class="negative">-11.80 (-2.91%)</span>
+                💰 股价：393.20 港元 |
+                📈 涨跌：<span class="negative">-12.40 (-3.06%)</span>
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="news">行情在盘整，等方向，快到底了 | 近5日 -4.23% | 近30日 -6.90% | 近90日 -30.67%</td>
+            <td colspan="2" class="news">行情在盘整，等方向，快到底了 | 近5日 -4.38% | 近30日 -7.04% | 近90日 -30.77%</td>
         </tr>
                 </tbody>
             </table>
@@ -434,7 +445,7 @@
             <h2 class="section-title">📈 市场表现</h2>
             <div class="market-index">
                 <span class="name">🏢 港股恒生指数</span>
-                <span class="value negative">24404.98 点 | -872.34 (-3.45%) | 收盘/休市</span>
+                <span class="value negative">24400.46 点 | -876.86 (-3.47%) | 收盘/休市</span>
             </div>
             <div class="market-index">
                 <span class="name">📈 美股纳斯达克</span>
@@ -447,7 +458,7 @@
             <div class="status">
                 <div class="status-item">
                     <div class="label">当前时间（北京时间）</div>
-                    <div class="value">2026-03-23 12:12:27</div>
+                    <div class="value">2026-03-23 12:22:22</div>
                 </div>
                 <div class="status-item">
                     <div class="label">数据日期</div>
