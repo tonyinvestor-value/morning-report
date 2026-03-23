@@ -310,6 +310,58 @@ HIGH_QUALITY_NEWS = [
 ]
 
 
+def fetch_eastmoney_news(days: int = 2) -> List[Dict]:
+    """从东方财富抓取新闻"""
+    news_list = []
+
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        }
+
+        urls = [
+            'https://finance.eastmoney.com/a/czqyw.html',
+            'https://stock.eastmoney.com/a/cywjh.html',
+        ]
+
+        for url in urls:
+            try:
+                response = requests.get(url, headers=headers, timeout=8)
+                response.encoding = 'utf-8'
+
+                if response.status_code == 200:
+                    import re
+                    # 匹配新闻标题和链接
+                    pattern = r'<a[^>]+href="(https?://[^\"]+)"[^>]*>([^<]{10,})</a>'
+                    matches = re.findall(pattern, response.text)
+
+                    today = datetime.now().date()
+                    seen_links = set()
+
+                    for link, title in matches:
+                        if 'eastmoney.com' in link and len(title) > 10 and '更多' not in title and link not in seen_links:
+                            seen_links.add(link)
+                            news_list.append({
+                                'title': title.strip(),
+                                'link': link,
+                                'pub_date': today.strftime('%Y-%m-%d'),
+                                'publisher': '东方财富',
+                                'source': '东方财富',
+                                'tags': []
+                            })
+
+                    if len(news_list) >= 15:
+                        break
+
+            except Exception as e:
+                continue
+
+    except Exception as e:
+        print(f"   ⚠️ 东方财富抓取失败: {e}")
+
+    return news_list[:15]
+
+
 def fetch_sina_finance_news(days: int = 2) -> List[Dict]:
     """从新浪财经抓取新闻"""
     news_list = []
@@ -442,10 +494,10 @@ def fetch_live_news(days: int = 2) -> List[Dict]:
     # 短暂休息避免被封
     time.sleep(0.5 + random.uniform(0, 0.5))
 
-    # 抓取更多新浪财经（增加新闻多样性）
-    sina_news2 = fetch_sina_finance_news(days)
-    print(f"      新浪财经(更多): 获取 {len(sina_news2)} 条")
-    all_news.extend(sina_news2)
+    # 抓取东方财富作为第二来源
+    em_news = fetch_eastmoney_news(days)
+    print(f"      东方财富: 获取 {len(em_news)} 条")
+    all_news.extend(em_news)
 
     return all_news
 
