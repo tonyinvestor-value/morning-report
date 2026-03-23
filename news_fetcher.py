@@ -362,6 +362,59 @@ def fetch_eastmoney_news(days: int = 2) -> List[Dict]:
     return news_list[:15]
 
 
+def fetch_caixin_news(days: int = 2) -> List[Dict]:
+    """从财新网抓取新闻"""
+    news_list = []
+
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        }
+
+        # 财新网首页
+        urls = [
+            'https://www.caixin.com/',
+            'https://finance.caixin.com/',
+        ]
+
+        for url in urls:
+            try:
+                response = requests.get(url, headers=headers, timeout=8)
+                response.encoding = 'utf-8'
+
+                if response.status_code == 200:
+                    import re
+                    # 匹配新闻标题和链接
+                    pattern = r'<a[^>]+href="(https?://[^\"]+caixin\.com[^\"]+)"[^>]*>([^<]{8,})</a>'
+                    matches = re.findall(pattern, response.text)
+
+                    today = datetime.now().date()
+                    seen_links = set()
+
+                    for link, title in matches:
+                        if len(title) > 10 and 'caixin.com' in link and '更多' not in title and link not in seen_links:
+                            seen_links.add(link)
+                            news_list.append({
+                                'title': title.strip(),
+                                'link': link,
+                                'pub_date': today.strftime('%Y-%m-%d'),
+                                'publisher': '财新网',
+                                'source': '财新网',
+                                'tags': []
+                            })
+
+                    if len(news_list) >= 15:
+                        break
+
+            except Exception as e:
+                continue
+
+    except Exception as e:
+        print(f"   ⚠️ 财新网抓取失败: {e}")
+
+    return news_list[:15]
+
+
 def fetch_sina_finance_news(days: int = 2) -> List[Dict]:
     """从新浪财经抓取新闻"""
     news_list = []
@@ -494,22 +547,18 @@ def fetch_live_news(days: int = 2) -> List[Dict]:
     # 短暂休息避免被封
     time.sleep(0.5 + random.uniform(0, 0.5))
 
-    # 抓取东方财富作为第二来源
-    em_news = fetch_eastmoney_news(days)
-    print(f"      东方财富: 获取 {len(em_news)} 条")
-    all_news.extend(em_news)
+    # 抓取财新网作为第二来源
+    caixin_news = fetch_caixin_news(days)
+    print(f"      财新网: 获取 {len(caixin_news)} 条")
+    all_news.extend(caixin_news)
 
     # 短暂休息
     time.sleep(0.5 + random.uniform(0, 0.5))
 
-    # 抓取新浪财经国际/宏观作为第三来源（标记为财联社）
-    # 财联社网站无法直接抓取，用新浪财经的内容替代
-    sina_global = fetch_sina_finance_news(days)
-    for news in sina_global:
-        news['source'] = '财联社'
-        news['publisher'] = '财联社'
-    print(f"      财联社: 获取 {len(sina_global)} 条")
-    all_news.extend(sina_global)
+    # 抓取东方财富作为第三来源
+    em_news = fetch_eastmoney_news(days)
+    print(f"      东方财富: 获取 {len(em_news)} 条")
+    all_news.extend(em_news)
 
     return all_news
 
