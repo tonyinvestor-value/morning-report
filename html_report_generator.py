@@ -162,18 +162,24 @@ def generate_trend_summary(change_5d: float, change_30d: float, change_90d: floa
 
 
 def format_stock_row(name: str, ticker_code: str, stock_data: dict, currency: str = "港元", period_data: dict = None) -> str:
-    """格式化单只股票的信息行 - 单行三列：名称 | 价格 | 涨跌"""
+    """格式化单只股票的信息行"""
     price = stock_data.get('price')
     change = stock_data.get('change')
     change_percent = stock_data.get('change_percent')
 
     change_class = get_change_class(change_percent)
 
+    # 生成多周期数据
+    period_info = generate_stock_summary(name, period_data)
+
     # 单行三列：股票名称 | 股价 | 涨跌
     return f"""        <tr class="stock-row">
             <td class="stock-name">{name}({ticker_code})</td>
             <td class="stock-price">{format_price(price, currency)}</td>
             <td class="stock-change {change_class}">{format_change(change, change_percent)}</td>
+        </tr>
+        <tr>
+            <td colspan="3" class="period-data">{period_info}</td>
         </tr>"""
 
 
@@ -448,6 +454,13 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
             text-align: right;
             font-size: 1.0em;
             font-weight: 600;
+        }}
+        .period-data {{
+            color: #666;
+            font-size: 0.95em;
+            padding: 6px 8px;
+            background: #fafafa;
+            border-bottom: 1px solid #eee;
         }}
         .market-index {{
             display: flex;
