@@ -72,29 +72,39 @@
             border-collapse: collapse;
         }
         .stock-name {
-            font-weight: bold;
-            font-size: 1.1em;
-            padding: 10px 5px;
+            font-weight: 700;
+            font-size: 1.4em;
+            padding: 12px 8px;
             color: #1a1a2e;
         }
         .news {
             color: #666;
-            font-size: 0.95em;
-            padding: 8px 5px;
+            font-size: 1.05em;
+            padding: 10px 8px;
             border-bottom: 1px solid #eee;
         }
         .price-row {
-            padding: 10px 5px;
+            padding: 10px 8px;
             color: #333;
-            font-size: 0.95em;
+            font-size: 1.1em;
         }
         .positive {
             color: #e53935;
-            font-weight: bold;
+            font-weight: 700;
         }
         .negative {
             color: #43a047;
-            font-weight: bold;
+            font-weight: 700;
+        }
+        .price-cell {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .price-cell .price {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
         }
         .market-index {
             display: flex;
@@ -263,34 +273,28 @@
                 font-size: 0.85em;
             }
             table {
-                font-size: 0.8em;
+                font-size: 0.85em;
             }
             th, td {
-                padding: 8px 4px;
+                padding: 10px 6px;
             }
             .stock-name {
-                font-size: 1.05em;
+                font-size: 1.3em;
             }
             .price {
-                font-size: 0.85em;
+                font-size: 1.1em;
             }
             .change {
-                font-size: 0.85em;
-            }
-            .prediction {
-                font-size: 0.75em;
-            }
-            .trend-summary {
-                font-size: 0.75em;
+                font-size: 1.0em;
             }
             .news-item {
                 padding: 12px;
             }
             .news-title {
-                font-size: 0.9em;
+                font-size: 1.0em;
             }
             .news-meta {
-                font-size: 0.75em;
+                font-size: 0.85em;
             }
             .footer {
                 font-size: 0.8em;
@@ -321,13 +325,13 @@
                 font-size: 1.3em;
             }
             table {
-                font-size: 0.75em;
+                font-size: 0.8em;
             }
             th, td {
-                padding: 6px 3px;
+                padding: 8px 4px;
             }
-            .prediction, .trend-summary {
-                font-size: 0.7em;
+            .stock-name {
+                font-size: 1.2em;
             }
             .news-list li {
                 flex-wrap: wrap;
@@ -356,51 +360,51 @@
             <h2 class="section-title hk">🇭🇰 港股动态</h2>
             <table>
                 <tbody>
-                            <tr>
+                            <tr class="stock-row">
             <td class="stock-name">腾讯(00700)</td>
-            <td class="price-row">
-                💰 股价：498.40 港元 |
-                📈 涨跌：<span class="negative">-9.60 (-1.89%)</span>
+            <td class="price-cell">
+                <span class="price">504.00 港元</span>
+                <span class="positive">+5.60 (+1.12%)</span>
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="news">行情在盘整，等方向 | 近5日 -9.38% | 近30日 -7.36% | 近90日 -17.21%</td>
-        </tr>        <tr>
+            <td colspan="2" class="news">近5日 -8.27% | 近30日 -2.88% | 近90日 -16.18%</td>
+        </tr>        <tr class="stock-row">
             <td class="stock-name">美团(03690)</td>
-            <td class="price-row">
-                💰 股价：76.55 港元 |
-                📈 涨跌：<span class="negative">-2.60 (-3.28%)</span>
+            <td class="price-cell">
+                <span class="price">77.25 港元</span>
+                <span class="positive">+0.70 (+0.91%)</span>
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="news">行情在盘整，等方向 | 近5日 -4.31% | 近30日 -9.94% | 近90日 -25.82%</td>
-        </tr>        <tr>
+            <td colspan="2" class="news">近5日 -3.55% | 近30日 -4.85% | 近90日 -24.88%</td>
+        </tr>        <tr class="stock-row">
             <td class="stock-name">理想汽车(02015)</td>
-            <td class="price-row">
-                💰 股价：64.80 港元 |
-                📈 涨跌：<span class="negative">-2.00 (-2.99%)</span>
+            <td class="price-cell">
+                <span class="price">64.25 港元</span>
+                <span class="negative">-0.55 (-0.85%)</span>
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="news">行情在盘整，等方向，快到底了 | 近5日 -9.12% | 近30日 -11.05% | 近90日 -0.54%</td>
-        </tr>        <tr>
+            <td colspan="2" class="news">近5日 -3.66% | 近30日 -10.24% | 近90日 -0.92%</td>
+        </tr>        <tr class="stock-row">
             <td class="stock-name">泡泡玛特(09992)</td>
-            <td class="price-row">
-                💰 股价：202.20 港元 |
-                📈 涨跌：<span class="negative">-7.40 (-3.53%)</span>
+            <td class="price-cell">
+                <span class="price">207.60 港元</span>
+                <span class="positive">+5.40 (+2.67%)</span>
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="news">行情在盘整，等方向 | 近5日 -6.13% | 近30日 -18.60% | 近90日 +0.90%</td>
-        </tr>        <tr>
+            <td colspan="2" class="news">近5日 -6.22% | 近30日 -11.04% | 近90日 +3.90%</td>
+        </tr>        <tr class="stock-row">
             <td class="stock-name">携程(09961)</td>
-            <td class="price-row">
-                💰 股价：390.40 港元 |
-                📈 涨跌：<span class="negative">-15.20 (-3.75%)</span>
+            <td class="price-cell">
+                <span class="price">390.00 港元</span>
+                <span class="negative">-0.40 (-0.10%)</span>
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="news">行情在盘整，等方向，快到底了 | 近5日 -5.06% | 近30日 -7.71% | 近90日 -31.27%</td>
+            <td colspan="2" class="news">近5日 -6.11% | 近30日 -4.08% | 近90日 -30.75%</td>
         </tr>
                 </tbody>
             </table>
@@ -410,42 +414,42 @@
             <h2 class="section-title us">🇺🇸 美股动态</h2>
             <table>
                 <tbody>
-                            <tr>
+                            <tr class="stock-row">
             <td class="stock-name">拼多多(PDD)</td>
-            <td class="price-row">
-                💰 股价：96.25 美元 |
-                📈 涨跌：<span class="positive">+0.06 (+0.06%)</span>
+            <td class="price-cell">
+                <span class="price">96.25 美元</span>
+                <span class="positive">+0.06 (+0.06%)</span>
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="news">跌势很猛，在加速，快到底了 | 近5日 -7.78% | 近30日 -9.95% | 近90日 -15.15%</td>
-        </tr>        <tr>
+            <td colspan="2" class="news">近5日 -7.78% | 近30日 -9.95% | 近90日 -15.15%</td>
+        </tr>        <tr class="stock-row">
             <td class="stock-name">亚马逊(AMZN)</td>
-            <td class="price-row">
-                💰 股价：210.14 美元 |
-                📈 涨跌：<span class="positive">+4.77 (+2.32%)</span>
+            <td class="price-cell">
+                <span class="price">210.14 美元</span>
+                <span class="positive">+4.77 (+2.32%)</span>
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="news">行情在盘整，等方向 | 近5日 -2.35% | 近30日 +0.76% | 近90日 -9.57%</td>
-        </tr>        <tr>
+            <td colspan="2" class="news">近5日 -2.35% | 近30日 +0.76% | 近90日 -9.57%</td>
+        </tr>        <tr class="stock-row">
             <td class="stock-name">英伟达(NVDA)</td>
-            <td class="price-row">
-                💰 股价：175.64 美元 |
-                📈 涨跌：<span class="positive">+2.94 (+1.70%)</span>
+            <td class="price-cell">
+                <span class="price">175.64 美元</span>
+                <span class="positive">+2.94 (+1.70%)</span>
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="news">数据不足 | 近5日 -3.46% | 近30日 -8.92% | 近90日 -6.87%</td>
-        </tr>        <tr>
+            <td colspan="2" class="news">近5日 -3.46% | 近30日 -8.92% | 近90日 -6.87%</td>
+        </tr>        <tr class="stock-row">
             <td class="stock-name">谷歌C(GOOGL)</td>
-            <td class="price-row">
-                💰 股价：302.06 美元 |
-                📈 涨跌：<span class="positive">+1.06 (+0.35%)</span>
+            <td class="price-cell">
+                <span class="price">302.06 美元</span>
+                <span class="positive">+1.06 (+0.35%)</span>
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="news">行情在盘整，等方向，快到底了 | 近5日 -2.85% | 近30日 -2.77% | 近90日 -3.76%</td>
+            <td colspan="2" class="news">近5日 -2.85% | 近30日 -2.77% | 近90日 -3.76%</td>
         </tr>
                 </tbody>
             </table>
@@ -455,7 +459,7 @@
             <h2 class="section-title">📈 市场表现</h2>
             <div class="market-index">
                 <span class="name">🏢 港股恒生指数</span>
-                <span class="value negative">24382.47 点 | -894.85 (-3.54%) | 收盘/休市</span>
+                <span class="value positive">24626.13 点 | +243.66 (+1.00%) | 开盘中</span>
             </div>
             <div class="market-index">
                 <span class="name">📈 美股纳斯达克</span>
@@ -468,15 +472,15 @@
             <div class="status">
                 <div class="status-item">
                     <div class="label">当前时间（北京时间）</div>
-                    <div class="value">2026-03-24 08:00:22</div>
+                    <div class="value">2026-03-24 10:31:58</div>
                 </div>
                 <div class="status-item">
                     <div class="label">数据日期</div>
-                    <div class="value">2026-03-23 (盘前数据)</div>
+                    <div class="value">2026-03-24 (实时)</div>
                 </div>
                 <div class="status-item">
                     <div class="label">港股状态</div>
-                    <div class="value">收盘/休市</div>
+                    <div class="value">开盘中</div>
                 </div>
                 <div class="status-item">
                     <div class="label">美股状态</div>
@@ -501,19 +505,23 @@
             <h3>📰 财新网</h3>
             <ul class="news-list">
                 <li>
-                    <a href="https://international.caixin.com/2026-03-24/102426621.html" target="_blank" class="news-title">古巴本月经历3次全国停电 俄罗斯石油或在月底抵古</a>
+                    <a href="https://www.caixin.com/2026-03-24/102426636.html" target="_blank" class="news-title">T早报｜12家平台企业被约谈；大疆就专利权属起诉影石；美国禁止进口外国制造的消费级路由器</a>
                     <span class="news-time">2026-03-24</span>
                 </li>
                 <li>
-                    <a href="https://www.caixin.com/2026-03-24/102426617.html" target="_blank" class="news-title">阿里蔡崇信：智能体将扰动50万亿美元白领劳动力经济</a>
+                    <a href="https://www.caixin.com/2026-03-24/102426627.html" target="_blank" class="news-title">新技术狙击古老结核病 预防性治疗仍待突破</a>
                     <span class="news-time">2026-03-24</span>
                 </li>
                 <li>
-                    <a href="https://finance.caixin.com/2026-03-24/102426615.html" target="_blank" class="news-title">财经早知道｜特朗普：美伊或在5天内达成协议</a>
+                    <a href="https://opinion.caixin.com/2026-03-24/102426672.html" target="_blank" class="news-title">重重疑虑，却成推动全球牛市上行推手</a>
                     <span class="news-time">2026-03-24</span>
                 </li>
                 <li>
-                    <a href="https://companies.caixin.com/2026-03-23/102426573.html" target="_blank" class="news-title">独家｜中国船东货轮开始使用伊朗海上“安全走廊”</a>
+                    <a href="https://finance.caixin.com/2026-03-24/102426661.html" target="_blank" class="news-title">沪深300ETF又放量 国家队“重仓基”成交额逆势增长</a>
+                    <span class="news-time">2026-03-24</span>
+                </li>
+                <li>
+                    <a href="https://finance.caixin.com/2026-03-24/102426658.html" target="_blank" class="news-title">今日开盘：两市双双高开 沪指涨幅0.95%</a>
                     <span class="news-time">2026-03-24</span>
                 </li>
             </ul>
@@ -522,11 +530,11 @@
             <h3>📰 新浪财经</h3>
             <ul class="news-list">
                 <li>
-                    <a href="https://finance.sina.com.cn/stock/hkstock/2026-03-23/doc-inhrxzzx4232568.shtml" target="_blank" class="news-title">港股午后持续下挫，恒生指数、恒生科技指数跌幅均扩大逾4%</a>
+                    <a href="https://finance.sina.com.cn/stock/marketresearch/2026-03-24/doc-inhrzuky0603601.shtml" target="_blank" class="news-title">中信建投：白酒行业迎十年周期大底 2026马年消费十大预测</a>
                     <span class="news-time">2026-03-24</span>
                 </li>
                 <li>
-                    <a href="https://finance.sina.com.cn/stock/marketresearch/2026-03-24/doc-inhrzumc3584858.shtml" target="_blank" class="news-title">中金：勿高估全球央行购金的动力</a>
+                    <a href="https://finance.sina.com.cn/stock/hkstock/marketalerts/2026-03-24/doc-inhrzyta1821500.shtml" target="_blank" class="news-title">快讯：恒指高开1.55% 科指涨1.3% 科网股、黄金股普涨 航空股回暖 新消费概念股活跃 老铺黄金涨超10%</a>
                     <span class="news-time">2026-03-24</span>
                 </li>
             </ul>
@@ -535,11 +543,7 @@
             <h3>📰 东方财富</h3>
             <ul class="news-list">
                 <li>
-                    <a href="https://finance.eastmoney.com/a/202603233679896966.html" target="_blank" class="news-title">金银跳水！日股重挫近2000点！韩国股市暴跌熔断！</a>
-                    <span class="news-time">2026-03-24</span>
-                </li>
-                <li>
-                    <a href="https://finance.eastmoney.com/a/202603233679887634.html" target="_blank" class="news-title">霍尔木兹海峡突传重磅！特朗普警告！油价跳水</a>
+                    <a href="https://finance.eastmoney.com/a/202602113647767995.html" target="_blank" class="news-title">18 年实战！MACD + 政策双驱动，拆解技术拐点与买卖秘籍｜对话彬哥看盘</a>
                     <span class="news-time">2026-03-24</span>
                 </li>
             </ul>
@@ -549,20 +553,9 @@
 
         <div class="footer">
             <p>🕐 信息时间范围：最近3天</p>
-            <p>📊 数据来源：财新网、新浪财经、华尔街见闻</p>
-            <p>🎯 覆盖公司：港股5家 + 美股4家重点标的</p>
+            <p>📊 数据来源：新浪财经、财新网、东方财富</p>
+            <p>🎯 覆盖公司：港股6只 + 美股4只</p>
             <p>💹 股价精度：收盘价/实时价，含涨跌幅和成交额</p>
-            <hr style="margin: 15px 0; border: none; border-top: 1px solid #ddd;">
-            <div class="bollinger-guide">
-                <h4>📈 布林带是什么？</h4>
-                <ul>
-                    <li><strong>收窄(squeeze)</strong>：行情在盘整，即将选择方向</li>
-                    <li><strong>放大(expanding)</strong>：趋势加速中，可能持续涨/跌</li>
-                    <li><strong>触及上轨</strong>：价格偏高，快到天花板了</li>
-                    <li><strong>触及下轨</strong>：价格偏低，快到底了</li>
-                </ul>
-            </div>
-            <p style="font-size: 0.85em; color: #999; margin-top: 15px;">💡 预测说明：基于布林带技术指标判断，仅供参考</p>
         </div>
     </div>
 </body>
