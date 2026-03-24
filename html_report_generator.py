@@ -96,13 +96,10 @@ def generate_stock_summary(name: str, period_data: dict) -> str:
         parts.append(f"近90日 {change_90d:+.2f}%")
 
     if not parts:
-        return "📊 近期暂无多周期数据"
+        return "📊 暂无数据"
 
-    # 基于动量指标生成预测（用change_5d作为短期动量）
-    prediction = generate_prediction(rsi_14, change_5d, momentum_30, bollinger)
-
-    # 生成简短总结：预测 + 数据
-    result = prediction + " | " + " | ".join(parts)
+    # 只返回多周期涨跌幅数据
+    result = " | ".join(parts)
 
     return result
 
@@ -175,12 +172,12 @@ def format_stock_row(name: str, ticker_code: str, stock_data: dict, currency: st
     # 生成股价总结
     summary = generate_stock_summary(name, period_data)
 
-    # 调整顺序：先显示股价涨跌，再显示预测
-    return f"""        <tr>
+    # 简洁展示：股价 | 涨跌 | 多周期数据
+    return f"""        <tr class="stock-row">
             <td class="stock-name">{name}({ticker_code})</td>
-            <td class="price-row">
-                💰 股价：{format_price(price, currency)} |
-                📈 涨跌：<span class="{change_class}">{format_change(change, change_percent)}</span>
+            <td class="price-cell">
+                <span class="price">{format_price(price, currency)}</span>
+                <span class="{change_class}">{format_change(change, change_percent)}</span>
             </td>
         </tr>
         <tr>
@@ -429,29 +426,39 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
             border-collapse: collapse;
         }}
         .stock-name {{
-            font-weight: bold;
-            font-size: 1.1em;
-            padding: 10px 5px;
+            font-weight: 700;
+            font-size: 1.4em;
+            padding: 12px 8px;
             color: #1a1a2e;
         }}
         .news {{
             color: #666;
-            font-size: 0.95em;
-            padding: 8px 5px;
+            font-size: 1.05em;
+            padding: 10px 8px;
             border-bottom: 1px solid #eee;
         }}
         .price-row {{
-            padding: 10px 5px;
+            padding: 10px 8px;
             color: #333;
-            font-size: 0.95em;
+            font-size: 1.1em;
         }}
         .positive {{
             color: #e53935;
-            font-weight: bold;
+            font-weight: 700;
         }}
         .negative {{
             color: #43a047;
-            font-weight: bold;
+            font-weight: 700;
+        }}
+        .price-cell {{
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }}
+        .price-cell .price {{
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
         }}
         .market-index {{
             display: flex;
@@ -620,34 +627,28 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
                 font-size: 0.85em;
             }}
             table {{
-                font-size: 0.8em;
+                font-size: 0.85em;
             }}
             th, td {{
-                padding: 8px 4px;
+                padding: 10px 6px;
             }}
             .stock-name {{
-                font-size: 1.05em;
+                font-size: 1.3em;
             }}
             .price {{
-                font-size: 0.85em;
+                font-size: 1.1em;
             }}
             .change {{
-                font-size: 0.85em;
-            }}
-            .prediction {{
-                font-size: 0.75em;
-            }}
-            .trend-summary {{
-                font-size: 0.75em;
+                font-size: 1.0em;
             }}
             .news-item {{
                 padding: 12px;
             }}
             .news-title {{
-                font-size: 0.9em;
+                font-size: 1.0em;
             }}
             .news-meta {{
-                font-size: 0.75em;
+                font-size: 0.85em;
             }}
             .footer {{
                 font-size: 0.8em;
@@ -678,13 +679,13 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
                 font-size: 1.3em;
             }}
             table {{
-                font-size: 0.75em;
+                font-size: 0.8em;
             }}
             th, td {{
-                padding: 6px 3px;
+                padding: 8px 4px;
             }}
-            .prediction, .trend-summary {{
-                font-size: 0.7em;
+            .stock-name {{
+                font-size: 1.2em;
             }}
             .news-list li {{
                 flex-wrap: wrap;
@@ -778,20 +779,9 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
 
         <div class="footer">
             <p>🕐 信息时间范围：最近3天</p>
-            <p>📊 数据来源：财新网、新浪财经、华尔街见闻</p>
-            <p>🎯 覆盖公司：港股5家 + 美股4家重点标的</p>
+            <p>📊 数据来源：新浪财经、财新网、东方财富</p>
+            <p>🎯 覆盖公司：港股6只 + 美股4只</p>
             <p>💹 股价精度：收盘价/实时价，含涨跌幅和成交额</p>
-            <hr style="margin: 15px 0; border: none; border-top: 1px solid #ddd;">
-            <div class="bollinger-guide">
-                <h4>📈 布林带是什么？</h4>
-                <ul>
-                    <li><strong>收窄(squeeze)</strong>：行情在盘整，即将选择方向</li>
-                    <li><strong>放大(expanding)</strong>：趋势加速中，可能持续涨/跌</li>
-                    <li><strong>触及上轨</strong>：价格偏高，快到天花板了</li>
-                    <li><strong>触及下轨</strong>：价格偏低，快到底了</li>
-                </ul>
-            </div>
-            <p style="font-size: 0.85em; color: #999; margin-top: 15px;">💡 预测说明：基于布林带技术指标判断，仅供参考</p>
         </div>
     </div>
 </body>
