@@ -162,26 +162,18 @@ def generate_trend_summary(change_5d: float, change_30d: float, change_90d: floa
 
 
 def format_stock_row(name: str, ticker_code: str, stock_data: dict, currency: str = "港元", period_data: dict = None) -> str:
-    """格式化单只股票的信息行"""
+    """格式化单只股票的信息行 - 单行三列：名称 | 价格 | 涨跌"""
     price = stock_data.get('price')
     change = stock_data.get('change')
     change_percent = stock_data.get('change_percent')
 
     change_class = get_change_class(change_percent)
 
-    # 生成股价总结
-    summary = generate_stock_summary(name, period_data)
-
-    # 简洁展示：股价 | 涨跌 | 多周期数据
+    # 单行三列：股票名称 | 股价 | 涨跌
     return f"""        <tr class="stock-row">
             <td class="stock-name">{name}({ticker_code})</td>
-            <td class="price-cell">
-                <span class="price">{format_price(price, currency)}</span>
-                <span class="{change_class}">{format_change(change, change_percent)}</span>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" class="news">{summary}</td>
+            <td class="stock-price">{format_price(price, currency)}</td>
+            <td class="stock-change {change_class}">{format_change(change, change_percent)}</td>
         </tr>"""
 
 
@@ -425,23 +417,6 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
             width: 100%;
             border-collapse: collapse;
         }}
-        .stock-name {{
-            font-weight: 700;
-            font-size: 1.4em;
-            padding: 12px 8px;
-            color: #1a1a2e;
-        }}
-        .news {{
-            color: #666;
-            font-size: 1.05em;
-            padding: 10px 8px;
-            border-bottom: 1px solid #eee;
-        }}
-        .price-row {{
-            padding: 10px 8px;
-            color: #333;
-            font-size: 1.1em;
-        }}
         .positive {{
             color: #e53935;
             font-weight: 700;
@@ -450,15 +425,29 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
             color: #43a047;
             font-weight: 700;
         }}
-        .price-cell {{
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        /* 股票表格三列布局 */
+        .stock-row td {{
+            padding: 10px 8px;
+            vertical-align: middle;
+            border-bottom: 1px solid #eee;
         }}
-        .price-cell .price {{
+        .stock-name {{
+            width: 45%;
+            text-align: left;
             font-size: 1.3em;
             font-weight: 600;
+        }}
+        .stock-price {{
+            width: 30%;
+            text-align: right;
+            font-size: 1.1em;
             color: #333;
+        }}
+        .stock-change {{
+            width: 25%;
+            text-align: right;
+            font-size: 1.0em;
+            font-weight: 600;
         }}
         .market-index {{
             display: flex;
