@@ -172,14 +172,16 @@ def format_stock_row(name: str, ticker_code: str, stock_data: dict, currency: st
     # 生成多周期数据
     period_info = generate_stock_summary(name, period_data)
 
-    # 单行三列：股票名称 | 股价 | 涨跌
+    # 格式：560.00港元 +10.50 (+2.60%)
+    change_value = format_change(change, change_percent)
+
+    # 两列：股票名称 | 价格+涨跌
     return f"""        <tr class="stock-row">
             <td class="stock-name">{name}({ticker_code})</td>
-            <td class="stock-price">{format_price(price, currency)}</td>
-            <td class="stock-change {change_class}">{format_change(change, change_percent)}</td>
+            <td class="stock-price">{format_price(price, currency)} <span class="{change_class}">{change_value}</span></td>
         </tr>
         <tr>
-            <td colspan="3" class="period-data">{period_info}</td>
+            <td colspan="2" class="period-data">{period_info}</td>
         </tr>"""
 
 
@@ -444,16 +446,10 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
             font-weight: 600;
         }}
         .stock-price {{
-            width: 30%;
+            width: 55%;
             text-align: right;
             font-size: 1.1em;
             color: #333;
-        }}
-        .stock-change {{
-            width: 25%;
-            text-align: right;
-            font-size: 1.0em;
-            font-weight: 600;
         }}
         .period-data {{
             color: #666;
