@@ -449,6 +449,7 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
             width: 55%;
             text-align: left;
             font-size: 1.0em;
+            font-weight: 600;
             color: #333;
             white-space: nowrap;
         }}
@@ -643,6 +644,9 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
             .market-index {{
                 font-size: 0.9em;
                 padding: 8px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
             }}
             .news-item {{
                 padding: 12px;
