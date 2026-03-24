@@ -447,9 +447,8 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
         }}
         .stock-price {{
             width: 55%;
-            text-align: right;
-            font-size: 1.1em;
-            font-family: "SF Mono", "Menlo", monospace;
+            text-align: left;
+            font-size: 1.0em;
             color: #333;
             white-space: nowrap;
         }}
