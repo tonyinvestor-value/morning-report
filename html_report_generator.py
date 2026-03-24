@@ -447,9 +447,10 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
         }}
         .stock-price {{
             width: 55%;
-            text-align: right;
+            text-align: center;
             font-size: 1.1em;
             color: #333;
+            white-space: nowrap;
         }}
         .period-data {{
             color: #666;
@@ -638,6 +639,10 @@ def generate_html_report(stock_data: dict, news_data: dict, indices_data: dict, 
             }}
             .change {{
                 font-size: 1.0em;
+            }}
+            .market-index {{
+                font-size: 1.1em;
+                padding: 10px;
             }}
             .news-item {{
                 padding: 12px;
