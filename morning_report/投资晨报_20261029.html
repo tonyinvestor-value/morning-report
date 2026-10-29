@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>港美股投资晨报 2026年10月29日</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: #1a1a2e;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .header .date {
+            color: #666;
+            font-size: 1.1em;
+        }
+        .disclaimer {
+            background: #ff9800;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .section {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1a1a2e;
+        }
+        .section-title.hk {
+            color: #e53935;
+        }
+        .section-title.us {
+            color: #1976d2;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .positive {
+            color: #e53935;
+            font-weight: 700;
+        }
+        .negative {
+            color: #43a047;
+            font-weight: 700;
+        }
+        /* 股票表格三列布局 */
+        .stock-row td {
+            padding: 10px 8px;
+            vertical-align: middle;
+            border-bottom: 1px solid #eee;
+        }
+        .stock-name {
+            width: 45%;
+            text-align: left;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+        .stock-price {
+            width: 55%;
+            text-align: left;
+            font-size: 1.0em;
+            font-weight: 600;
+            color: #333;
+            white-space: nowrap;
+        }
+        .period-data {
+            color: #666;
+            font-size: 0.95em;
+            padding: 6px 8px;
+            background: #fafafa;
+            border-bottom: 1px solid #eee;
+        }
+        .market-index {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .market-index .name {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .market-index .value {
+            font-size: 1.2em;
+        }
+        .status {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .status-item {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .status-item .label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        .status-item .value {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .news-list {
+            list-style: none;
+        }
+        .news-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            gap: 8px;
+            flex-wrap: nowrap;
+            align-items: flex-start;
+        }
+        .news-list li:last-child {
+            border-bottom: none;
+        }
+        .news-source {
+            background: #1976d2;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            display: inline-block;
+            text-align: center;
+            min-width: 50px;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+        .news-title {
+            flex: 1;
+            color: #1976d2;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .news-title:hover {
+            text-decoration: underline;
+            color: #0d47a1;
+        }
+        .news-time {
+            color: #999;
+            font-size: 0.85em;
+            white-space: nowrap;
+        }
+        .stock-news {
+            margin-bottom: 15px;
+        }
+        .stock-news-group {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #1976d2;
+        }
+        .stock-news-group h4 {
+            margin: 0 0 10px 0;
+            color: #1976d2;
+            font-size: 1.1em;
+        }
+        .news-section {
+            margin-bottom: 25px;
+        }
+        .news-section h3 {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1976d2;
+        }
+        .stock-news-group .news-list {
+            margin: 0;
+            padding-left: 10px;
+        }
+        .strategy {
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .strategy ol {
+            margin-left: 20px;
+            color: #333;
+        }
+        .strategy li {
+            margin-bottom: 8px;
+        }
+        .bollinger-guide {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: left;
+        }
+        .bollinger-guide h4 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+        .bollinger-guide ul {
+            margin-left: 20px;
+            color: #555;
+            line-height: 1.8;
+        }
+        .bollinger-guide li {
+            margin-bottom: 8px;
+        }
+        .footer {
+            text-align: center;
+            color: #aaa;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+        /* ==================== 响应式布局 ==================== */
+        /* 手机端适配 */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .header {
+                padding: 20px 10px;
+            }
+            .header h1 {
+                font-size: 1.5em;
+            }
+            .header .date {
+                font-size: 0.9em;
+            }
+            .disclaimer {
+                padding: 12px;
+                font-size: 0.85em;
+            }
+            table {
+                font-size: 0.85em;
+            }
+            th, td {
+                padding: 10px 6px;
+            }
+            .stock-name {
+                font-size: 1.3em;
+            }
+            .price {
+                font-size: 1.1em;
+            }
+            .change {
+                font-size: 1.0em;
+            }
+            .market-index {
+                font-size: 0.9em;
+                padding: 8px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            .news-item {
+                padding: 12px;
+            }
+            .news-title {
+                font-size: 1.0em;
+            }
+            .news-meta {
+                font-size: 0.85em;
+            }
+            .footer {
+                font-size: 0.8em;
+                padding: 15px 10px;
+            }
+            .bollinger-guide {
+                text-align: left;
+                padding: 15px;
+                font-size: 0.85em;
+            }
+            .bollinger-guide h4 {
+                font-size: 1em;
+                margin-bottom: 10px;
+            }
+            .bollinger-guide ul {
+                margin-left: 15px;
+            }
+            .bollinger-guide li {
+                margin-bottom: 6px;
+            }
+        }
+        /* 更小的手机 */
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+            .header h1 {
+                font-size: 1.3em;
+            }
+            table {
+                font-size: 0.8em;
+            }
+            th, td {
+                padding: 8px 4px;
+            }
+            .stock-name {
+                font-size: 1.2em;
+            }
+            .news-list li {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .news-source {
+                min-width: auto;
+                font-size: 0.7em;
+                padding: 3px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 港美股投资晨报</h1>
+            <div class="date">2026年10月29日</div>
+        </div>
+
+        <div class="disclaimer">
+            ⚠️ 时效声明：以下信息均为最近3天内的最新消息
+        </div>
+
+        <div class="section">
+            <h2 class="section-title hk">🇭🇰 港股动态</h2>
+            <table>
+                <tbody>
+                            <tr class="stock-row">
+            <td class="stock-name">腾讯(00700)</td>
+            <td class="stock-price">382.40 港元 <span class="negative">-5.20 (-1.34%)</span></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="period-data">近5日 -1.04% | 近30日 -11.57% | 近90日 -18.10%</td>
+        </tr>        <tr class="stock-row">
+            <td class="stock-name">美团(03690)</td>
+            <td class="stock-price">70.10 港元 <span class="negative">-1.10 (-1.54%)</span></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="period-data">近5日 -2.30% | 近30日 -0.64% | 近90日 -24.16%</td>
+        </tr>        <tr class="stock-row">
+            <td class="stock-name">理想汽车(02015)</td>
+            <td class="stock-price">44.48 港元 <span class="negative">-0.16 (-0.36%)</span></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="period-data">近5日 -1.38% | 近30日 -0.18% | 近90日 -18.57%</td>
+        </tr>        <tr class="stock-row">
+            <td class="stock-name">泡泡玛特(09992)</td>
+            <td class="stock-price">127.00 港元 <span class="negative">-3.70 (-2.83%)</span></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="period-data">近5日 -3.57% | 近30日 -17.85% | 近90日 -23.68%</td>
+        </tr>        <tr class="stock-row">
+            <td class="stock-name">携程(09961)</td>
+            <td class="stock-price">303.20 港元 <span class="negative">-5.80 (-1.88%)</span></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="period-data">近5日 -3.68% | 近30日 -1.24% | 近90日 -17.38%</td>
+        </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title us">🇺🇸 美股动态</h2>
+            <table>
+                <tbody>
+                            <tr class="stock-row">
+            <td class="stock-name">拼多多(PDD)</td>
+            <td class="stock-price">77.47 美元 <span class="negative">-0.93 (-1.19%)</span></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="period-data">近5日 -2.15% | 近30日 -0.04% | 近90日 -12.28%</td>
+        </tr>        <tr class="stock-row">
+            <td class="stock-name">亚马逊(AMZN)</td>
+            <td class="stock-price">254.60 美元 <span class="positive">+1.50 (+0.59%)</span></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="period-data">近5日 +1.69% | 近30日 +3.21% | 近90日 +12.33%</td>
+        </tr>        <tr class="stock-row">
+            <td class="stock-name">英伟达(NVDA)</td>
+            <td class="stock-price">215.38 美元 <span class="negative">-2.56 (-1.17%)</span></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="period-data">近5日 +1.49% | 近30日 -5.21% | 近90日 +13.48%</td>
+        </tr>        <tr class="stock-row">
+            <td class="stock-name">谷歌C(GOOGL)</td>
+            <td class="stock-price">324.89 美元 <span class="positive">+4.31 (+1.34%)</span></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="period-data">近5日 +0.21% | 近30日 -4.70% | 近90日 -3.45%</td>
+        </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">📈 市场表现</h2>
+            <div class="market-index">
+                <span class="name">🏢 港股恒生指数</span>
+                <span class="value positive">23143.45 点 | +48.62 (+0.21%) | 开盘中</span>
+            </div>
+            <div class="market-index">
+                <span class="name">📈 美股纳斯达克</span>
+                <span class="value positive">26549.85 点 | +72.04 (+0.27%) | 收盘/休市</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">📊 交易状态说明</h2>
+            <div class="status">
+                <div class="status-item">
+                    <div class="label">当前时间（北京时间）</div>
+                    <div class="value">2026-10-29 10:16:12</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">数据日期</div>
+                    <div class="value">2026-10-29 (实时)</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">港股状态</div>
+                    <div class="value">开盘中</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">美股状态</div>
+                    <div class="value">收盘/休市</div>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">📌 个股相关新闻</h2>
+            <div class="stock-news">
+                <div class="stock-news-group"><h4>📌 英伟达相关新闻</h4><ul class="news-list">            <li>
+                <span class="news-source">新浪财经</span>
+                <a href="https://finance.sina.com.cn/stock/bxjj/2026-10-29/doc-iniwvwra6132725.shtml" target="_blank" class="news-title">英伟达“开团” 算力基建或再提速</a>
+                <span class="news-time">2026-10-29</span>
+            </li></ul></div><div class="stock-news-group"><h4>📌 谷歌C相关新闻</h4><ul class="news-list">            <li>
+                <span class="news-source">财新网</span>
+                <a href="https://www.caixin.com/2026-10-29/102498353.html" target="_blank" class="news-title">T早报｜苹果推出触屏笔记本电脑；谷歌发布世界模型Genie 4；微软第一财季业绩超预期</a>
+                <span class="news-time">2026-10-29</span>
+            </li>            <li>
+                <span class="news-source">东方财富</span>
+                <a href="https://finance.eastmoney.com/a/202610293912805732.html" target="_blank" class="news-title">科技股盘后突发跳水！谷歌盘后跌超10% 美联储12月加息概率为78.4%</a>
+                <span class="news-time">2026-10-29</span>
+            </li></ul></div><div class="stock-news-group"><h4>📌 微软相关新闻</h4><ul class="news-list">            <li>
+                <span class="news-source">东方财富</span>
+                <a href="https://topic.eastmoney.com/detail/wrcbly.html" target="_blank" class="news-title">微软财报亮眼：Azure同比猛增48%</a>
+                <span class="news-time">2026-10-29</span>
+            </li></ul></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">📰 综合财经新闻</h2>
+            <ul class="news-list">
+                
+        <div class="news-section">
+            <h3>📰 财新网</h3>
+            <ul class="news-list">
+                <li>
+                    <a href="https://finance.caixin.com/2026-10-29/102498332.html" target="_blank" class="news-title">上市三月纳入指数权重第一  长鑫科技年底或撬动超两百亿被动资金</a>
+                    <span class="news-time">2026-10-29</span>
+                </li>
+                <li>
+                    <a href="https://finance.caixin.com/2026-10-29/102498316.html" target="_blank" class="news-title">财经早知道｜长鑫科技纳入上证指数，列第一大权重股</a>
+                    <span class="news-time">2026-10-29</span>
+                </li>
+                <li>
+                    <a href="https://finance.caixin.com/2026-10-28/102498285.html" target="_blank" class="news-title">8000亿元新型政策性金融工具投放完成 聚焦数字经济和人工智能等</a>
+                    <span class="news-time">2026-10-29</span>
+                </li>
+                <li>
+                    <a href="https://finance.caixin.com/2026-10-29/102498320.html" target="_blank" class="news-title">央行原副行长李波即将卸任IMF副总裁 接任者廖岷</a>
+                    <span class="news-time">2026-10-29</span>
+                </li>
+                <li>
+                    <a href="https://finance.caixin.com/2026-10-29/102498364.html" target="_blank" class="news-title">今日开盘：两市双双低开 沪指跌幅0.13%</a>
+                    <span class="news-time">2026-10-29</span>
+                </li>
+            </ul>
+        </div>
+        <div class="news-section">
+            <h3>📰 新浪财经</h3>
+            <ul class="news-list">
+                <li>
+                    <a href="https://finance.sina.com.cn/stock/observe/2026-10-28/doc-iniwukpu6588240.shtml" target="_blank" class="news-title">龙芯中科定增“瘦身”——补流被砍、GPU募资腰斩 存货、应收减值风险高悬 盈利拐点还有多远？</a>
+                    <span class="news-time">2026-10-29</span>
+                </li>
+                <li>
+                    <a href="https://finance.sina.com.cn/stock/hkstock/2026-10-29/doc-iniwwawy6043426.shtml" target="_blank" class="news-title">港股低开低走，恒生科技指数跌幅扩大逾1%</a>
+                    <span class="news-time">2026-10-29</span>
+                </li>
+            </ul>
+        </div>
+        <div class="news-section">
+            <h3>📰 东方财富</h3>
+            <ul class="news-list">
+                <li>
+                    <a href="https://finance.eastmoney.com/a/202610283911519786.html" target="_blank" class="news-title">批量涨停！人形机器人赛道全线爆发 宇树科技再上700元大关 背后有何硬逻辑？</a>
+                    <span class="news-time">2026-10-29</span>
+                </li>
+            </ul>
+        </div>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>🕐 信息时间范围：最近3天</p>
+            <p>📊 数据来源：新浪财经、财新网、东方财富</p>
+            <p>🎯 覆盖公司：港股6只 + 美股4只</p>
+            <p>💹 股价精度：收盘价/实时价，含涨跌幅和成交额</p>
+        </div>
+    </div>
+</body>
+</html>
